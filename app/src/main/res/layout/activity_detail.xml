@@ -1,0 +1,15 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:defaultValue="@string/pref_range_default"
+    android:inputType="text"
+    android:key="@string/pref_value_key"
+    android:singleLine="true"
+    android:title="@string/pref_value_label"
+    tools:context="app.com.project.csmith.finalyearproject.DetailActivity"
+    tools:ignore="MergeRootFrame">
+
+</FrameLayout>
+

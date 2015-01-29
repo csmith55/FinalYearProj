@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="app_name">GeoSocial Network</string>
+
+    <string name="app_id">882702668415869</string>
+
+
+    <string name="action_settings">New Query</string>
+    <string name="action_map">Map Location</string>
+    <string name="action_share">Share</string>
+    <string name="settings">Settings</string>
+    <string name="action_refresh" translatable="false">Refresh</string>
+    <string name="title_activity_detail">Details</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_value_label">Max Range/Max number of friends</string>
+    <string name="pref_value_key" translatable="false">value</string>
+    <string name="pref_range_default" translatable="false">100</string>
+    <string name="pref_queryType_label">Query Type</string>
+    <string name="pref_queryType_label_range">Range Friends</string>
+    <string name="pref_queryType_label_nearest">Nearest Friends</string>
+    <string name="pref_queryType_key" translatable="false">units</string>
+    <string name="pref_queryType_range" translatable="false">Range Friends</string>
+    <string name="pref_queryType_nearest" translatable="false">Nearest Friends</string>
+    <string name="pictures">pictures</string>
+    <string name="get_started">Log in to get started!</string>
+    <string name="Checkins">New Text</string>
+
+</resources>

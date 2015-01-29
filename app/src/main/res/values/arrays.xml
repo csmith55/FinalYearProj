@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_units_options">
+        <item>@string/pref_queryType_label_range</item>
+        <item>@string/pref_queryType_label_nearest</item>
+    </string-array>
+
+    <string-array name="pref_units_values">
+        <item>@string/pref_queryType_range</item>
+        <item>@string/pref_queryType_nearest</item>
+    </string-array>
+</resources>

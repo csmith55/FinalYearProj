@@ -1,0 +1,21 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppTheme" parent="android:Theme.Holo" tools:ignore="NewApi">
+
+        <item name="android:popupMenuStyle">@style/MyApp.PopupMenu</item>
+        <item name="android:actionBarStyle">@style/MyApp.ActionBar</item>
+    </style>
+
+
+    <style name="MyApp.PopupMenu" parent="android:Widget.Holo.Light.ListPopupWindow" tools:ignore="NewApi">
+        <item name="android:popupBackground">#3B5999</item>
+    </style>
+
+
+    <style name="MyApp.ActionBar" parent="android:Widget.Holo.Light.ActionBar.Solid" tools:ignore="NewApi">
+
+        <item name="android:background">#3B5999</item>
+    </style>
+
+
+</resources>
