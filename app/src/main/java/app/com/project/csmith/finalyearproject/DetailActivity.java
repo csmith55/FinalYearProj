@@ -89,7 +89,10 @@ public class DetailActivity extends Activity {
         private static final String hashTagShare = " #Friends";
         private String locationString;
         private String text[] = new String[1];
-
+        private double latitude = 54.5609420;
+        private double longitude=-6.0013630;
+        private int PROXIMITY_RADIUS=500;
+        private String GOOGLE_API_KEY="AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
 
         public DetailFragment() {
             setHasOptionsMenu(true);
@@ -99,6 +102,7 @@ public class DetailActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+
 
             Intent intent = getActivity().getIntent();
             if (intent != null && intent.hasExtra("FBNAMES") && intent.hasExtra("FBPICS")) {
@@ -121,12 +125,14 @@ public class DetailActivity extends Activity {
                 GoogleMap map = getMapFragment().getMap();
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(54.5609420,-6.0013630)).zoom(14).bearing(90).tilt(30).build();                   // Creates a CameraPosition from the builder
+                        .target(new LatLng(latitude,longitude)).zoom(14).bearing(90).tilt(30).build();                   // Creates a CameraPosition from the builder
                 map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(54.5609420, -6.0013630)).title(text[0]).snippet(text[1]));
+                Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title(text[0]).snippet(text[1]));
                 marker.showInfoWindow();
 
+                FetchPlaces fetchPlaces = new FetchPlaces();
+                fetchPlaces.execute(map);
             }
 
             return rootView;
