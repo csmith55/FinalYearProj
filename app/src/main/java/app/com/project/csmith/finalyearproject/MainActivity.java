@@ -88,13 +88,13 @@ public class MainActivity extends FragmentActivity {
         uiHelper.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FragmentManager fm = getSupportFragmentManager();
-        fragments[SPLASH] = fm.findFragmentById(R.id.splashFragment);
-        fragments[SELECTION] = fm.findFragmentById(R.id.selectionFragment);
-        fragments[SETTINGS] = fm.findFragmentById(R.id.userSettingsFragment);
+        getFragments()[SPLASH] = fm.findFragmentById(R.id.splashFragment);
+        getFragments()[SELECTION] = fm.findFragmentById(R.id.selectionFragment);
+        getFragments()[SETTINGS] = fm.findFragmentById(R.id.userSettingsFragment);
 
         FragmentTransaction transaction = fm.beginTransaction();
-        for (int i = 0; i < fragments.length; i++) {
-            transaction.hide(fragments[i]);
+        for (int i = 0; i < getFragments().length; i++) {
+            transaction.hide(getFragments()[i]);
         }
         transaction.commit();
 
@@ -104,7 +104,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // only add the menu when the selection fragment is showing
-        if (fragments[SELECTION].isVisible()) {
+        if (getFragments()[SELECTION].isVisible()) {
             if (menu.size() == 0) {
                 settings = menu.add(R.string.settings);
             }
@@ -128,11 +128,11 @@ public class MainActivity extends FragmentActivity {
     private void showFragment(int fragmentIndex, boolean addToBackStack) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        for (int i = 0; i < fragments.length; i++) {
+        for (int i = 0; i < getFragments().length; i++) {
             if (i == fragmentIndex) {
-                transaction.show(fragments[i]);
+                transaction.show(getFragments()[i]);
             } else {
-                transaction.hide(fragments[i]);
+                transaction.hide(getFragments()[i]);
             }
         }
         if (addToBackStack) {
@@ -218,4 +218,11 @@ public class MainActivity extends FragmentActivity {
         uiHelper.onSaveInstanceState(outState);
     }
 
+    public Fragment[] getFragments() {
+        return fragments;
+    }
+
+    public void setFragments(Fragment[] fragments) {
+        this.fragments = fragments;
+    }
 }

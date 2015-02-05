@@ -2,8 +2,14 @@ package app.com.project.csmith.finalyearproject;
 
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,9 +33,11 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.ProfilePictureView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MainFragment extends android.support.v4.app.Fragment {
@@ -47,8 +55,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
     };
     private UiLifecycleHelper uiHelper;
     private ArrayList<String> profilePics = new ArrayList<String>();
-
-
+    private LocationManager locationManager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +102,54 @@ public class MainFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         profileName = new ArrayAdapter<>(getActivity(), R.layout.list_item, R.id.list_item_friend_textview, new ArrayList<String>());
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        String locationProvider = LocationManager.GPS_PROVIDER;
+       locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                updateFriends();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        locationManager.requestLocationUpdates(locationProvider,0,0,locationListener);
+
+        Location lastKnown = locationManager.getLastKnownLocation(locationProvider);
+        //When finished!!
+       // locationManager.removeUpdates(locationListener);
+
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(getActivity(), Locale.getDefault());
+        try {
+            addresses = geocoder.getFromLocation(lastKnown.getLatitude(), lastKnown.getLongitude(), 1);
+
+            String address = addresses.get(0).getAddressLine(0);
+            String city = addresses.get(0).getAddressLine(1);
+            String country = addresses.get(0).getAddressLine(2);
+           Log.d("Location Address : ", address);
+            Log.d("Location City : ", city);
+            Log.d("Location country : ", country);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        locationManager.removeUpdates(locationListener);
 
 
         LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
