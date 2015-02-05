@@ -35,11 +35,18 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.facebook.widget.ProfilePictureView;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class DetailActivity extends Activity {
 
-   // MapView mapView;
+
 
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -93,7 +100,6 @@ public class DetailActivity extends Activity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-
             Intent intent = getActivity().getIntent();
             if (intent != null && intent.hasExtra("FBNAMES") && intent.hasExtra("FBPICS")) {
                 locationString = intent.getStringExtra("FBNAMES");
@@ -112,10 +118,36 @@ public class DetailActivity extends Activity {
                 profilePictureView.setProfileId(intent.getStringExtra("FBPICS"));
                 profilePictureView.setCropped(true);
 
+                GoogleMap map = getMapFragment().getMap();
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(54.5609420,-6.0013630)).zoom(14).bearing(90).tilt(30).build();                   // Creates a CameraPosition from the builder
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(54.5609420, -6.0013630)).title(text[0]).snippet(text[1]));
+                marker.showInfoWindow();
+
             }
 
             return rootView;
         }
+            private MapFragment getMapFragment() {
+                android.app.FragmentManager fm = null;
+
+                Log.d("SDK", "sdk: " + Build.VERSION.SDK_INT);
+                Log.d("RELEASE", "release: " + Build.VERSION.RELEASE);
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    Log.d("GEO", "using getFragmentManager");
+                    fm = getFragmentManager();
+                } else {
+                    Log.d("GEO", "using getChildFragmentManager");
+                    fm = getChildFragmentManager();
+                }
+
+                return (MapFragment) fm.findFragmentById(R.id.map);
+            }
+
 
         private void openPreferredLocationInMap() {
             SharedPreferences sharedPrefs =
