@@ -135,17 +135,19 @@ public class MainFragment extends android.support.v4.app.Fragment {
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(getActivity(), Locale.getDefault());
-        try {
-            addresses = geocoder.getFromLocation(lastKnown.getLatitude(), lastKnown.getLongitude(), 1);
+        if(lastKnown!=null) {
+            try {
+                addresses = geocoder.getFromLocation(lastKnown.getLatitude(), lastKnown.getLongitude(), 1);
 
-            String address = addresses.get(0).getAddressLine(0);
-            String city = addresses.get(0).getAddressLine(1);
-            String country = addresses.get(0).getAddressLine(2);
-           Log.d("Location Address : ", address);
-            Log.d("Location City : ", city);
-            Log.d("Location country : ", country);
-        } catch (IOException e) {
-            e.printStackTrace();
+                String address = addresses.get(0).getAddressLine(0);
+                String city = addresses.get(0).getAddressLine(1);
+                String country = addresses.get(0).getAddressLine(2);
+                Log.d("Location Address : ", address);
+                Log.d("Location City : ", city);
+                Log.d("Location country : ", country);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
 

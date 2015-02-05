@@ -42,5 +42,15 @@
         android:textStyle="italic"
         android:typeface="serif" />
 
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.google.android.gms.maps.MapFragment"
+        android:layout_below="@+id/checkins"
+        android:layout_alignRight="@+id/profile_pic"
+        android:layout_alignEnd="@+id/profile_pic" />
+
+
 
 </RelativeLayout>

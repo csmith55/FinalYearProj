@@ -39,6 +39,8 @@ import com.facebook.widget.ProfilePictureView;
 
 public class DetailActivity extends Activity {
 
+   // MapView mapView;
+
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override

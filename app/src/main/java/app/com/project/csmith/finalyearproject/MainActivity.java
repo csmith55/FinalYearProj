@@ -184,6 +184,8 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onResume() {
+
+        //CHECK FOR GOOGLE API VERSION BEFORE CONTINUING https://developer.android.com/google/play-services/setup.html
         super.onResume();
         isResumed = true;
         uiHelper.onResume();
