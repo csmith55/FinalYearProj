@@ -31,6 +31,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
@@ -89,10 +90,11 @@ public class DetailActivity extends Activity {
         private static final String hashTagShare = " #Friends";
         private String locationString;
         private String text[] = new String[1];
-        private double latitude = 54.5609420;
-        private double longitude=-6.0013630;
+        private double latitude = 54.564169;
+        private double longitude=-6.0012803;
         private int PROXIMITY_RADIUS=500;
         private String GOOGLE_API_KEY="AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
+        private  Intent intent;
 
         public DetailFragment() {
             setHasOptionsMenu(true);
@@ -104,7 +106,7 @@ public class DetailActivity extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
 
-            Intent intent = getActivity().getIntent();
+            intent = getActivity().getIntent();
             if (intent != null && intent.hasExtra("FBNAMES") && intent.hasExtra("FBPICS")) {
                 locationString = intent.getStringExtra("FBNAMES");
                 text = locationString.split("Location:");
@@ -122,6 +124,16 @@ public class DetailActivity extends Activity {
                 profilePictureView.setProfileId(intent.getStringExtra("FBPICS"));
                 profilePictureView.setCropped(true);
 
+
+
+                Button button = (Button) rootView.findViewById(R.id.getInTouch);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        applyIntents(v);
+                    }
+                });
+
                 GoogleMap map = getMapFragment().getMap();
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -131,28 +143,39 @@ public class DetailActivity extends Activity {
                 Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title(text[0]).snippet(text[1]));
                 marker.showInfoWindow();
 
-                FetchPlaces fetchPlaces = new FetchPlaces();
-                fetchPlaces.execute(map);
+
             }
 
             return rootView;
         }
-            private MapFragment getMapFragment() {
-                android.app.FragmentManager fm = null;
 
-                Log.d("SDK", "sdk: " + Build.VERSION.SDK_INT);
-                Log.d("RELEASE", "release: " + Build.VERSION.RELEASE);
+        public void applyIntents(View view) {
+            Intent placesIntent = new Intent(getActivity(), PlacesActivity.class)
+                    .putExtra("LNG", longitude);
+            placesIntent.putExtra("LAT",latitude);
+            placesIntent.putExtra("UserLng",intent.getDoubleExtra("UserLng",0));
+            placesIntent.putExtra("UserLat", intent.getDoubleExtra("UserLat",0));
 
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    Log.d("GEO", "using getFragmentManager");
-                    fm = getFragmentManager();
-                } else {
-                    Log.d("GEO", "using getChildFragmentManager");
-                    fm = getChildFragmentManager();
-                }
+            startActivity(placesIntent);
+        }
 
-                return (MapFragment) fm.findFragmentById(R.id.map);
+        private MapFragment getMapFragment() {
+            android.app.FragmentManager fm = null;
+
+            Log.d("SDK", "sdk: " + Build.VERSION.SDK_INT);
+            Log.d("RELEASE", "release: " + Build.VERSION.RELEASE);
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                Log.d("GEO", "using getFragmentManager");
+                fm = getFragmentManager();
+            } else {
+                Log.d("GEO", "using getChildFragmentManager");
+                fm = getChildFragmentManager();
             }
+
+            return (MapFragment) fm.findFragmentById(R.id.map);
+        }
+
 
 
         private void openPreferredLocationInMap() {

@@ -26,5 +26,7 @@
     <string name="pictures">pictures</string>
     <string name="get_started">Log in to get started!</string>
     <string name="Checkins">New Text</string>
+    <string name="GetInTouch">New Button</string>
+    <string name="UserLocation">Medium Text</string>
 
 </resources>

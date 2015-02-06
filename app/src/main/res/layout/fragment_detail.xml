@@ -47,10 +47,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         class="com.google.android.gms.maps.MapFragment"
-        android:layout_below="@+id/checkins"
-        android:layout_alignRight="@+id/profile_pic"
-        android:layout_alignEnd="@+id/profile_pic" />
+        android:layout_below="@+id/profile_pic"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/checkins" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/GetInTouch"
+        android:id="@+id/getInTouch"
+
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="88dp" />
 
 
 </RelativeLayout>

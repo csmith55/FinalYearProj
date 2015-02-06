@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -24,6 +24,17 @@ public class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
     private final String LOG_TAG = FetchPlaces.class.getSimpleName();
     private GoogleMap googleMap;
+    String[] foodDrink = {"cafe","bar","meal_delivery","meal_takeaway","restaurant", "food","bakery"};
+
+    String[] entertainment = {"amusement_park","bowling_alley","casino","gym","movie_rental","movie_theater","night_club","stadium","aquarium","zoo"};
+
+    String[] shopping = {"bicycle_store","book_store", "clothing_store", "convenience_store", "department_store", "electronics_store", "florist", "furniture_store", "grocery_or_supermarket", "hardware_store", "home_goods_store", "jewelry_store", "liquor_store", "pet_store", "shopping_mall", "shoe_store", "store"};
+
+
+    String[] healthBeauty = {"beauty_salon", "dentist", "doctor", "hair_care", "health", "hospital", "pharmacy", "physiotherapist", "spa", "veterinary_care"};
+
+    String[] services = {"atm", "bank", "bus_station", "car_rental", "car_dealer" ,"car_repair", "car_wash", "electrician", "fire_station", "gas_station", "laundry", "library", "lodging", "plumber", "police", "real_estate_agency", "subway_station", "taxi_stand", "train_station", "travel_agency"};
+
 
 
     private Places[] getPlacesFromJson(String placesJson)
@@ -31,7 +42,7 @@ public class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
 //        android.os.Debug.waitForDebugger();
 
-       
+
         final String RESULTS = "results";
         final String GEOMETRY = "geometry";
         final String NAME = "name";
@@ -78,7 +89,7 @@ public class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
         try {
 
-            String longLat = "54.5609420,-6.0013630";
+            String longLat = "54.564169, -6.0012803";
 
             final String PLACES_URL =
                     "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
@@ -156,10 +167,97 @@ public class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
     @Override
     protected void onPostExecute(Places[] places) {
+
+
         for(Places place:places){
-            Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
-                    .title(place.getName())
-                    .snippet(place.getType()));
+
+            if(isFoodDrink(place, foodDrink)){
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+                        .title(place.getName())
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+
+            }
+
+            else if(isEntertainment(place, entertainment)){
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+                        .title(place.getName())
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+
+            }
+
+            else if(isShopping(place, shopping)){
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+                        .title(place.getName())
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+
+
+            }
+
+            else if(isHealthBeauty(place, healthBeauty)){
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+                        .title(place.getName())
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+
+            }
+
+            else if(isService(place, services)){
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+                        .title(place.getName())
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+            }
+            else {
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+                        .title(place.getName())
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+            }
+
+
         }
+    }
+
+    private boolean isService(Places place, String[] services) {
+        for (String s : services){
+            if (place.getType().contains(s)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isHealthBeauty(Places place, String[] healthBeauty) {
+        for(String s : healthBeauty){
+            if (place.getType().contains(s)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isShopping(Places place, String[] shopping) {
+        for (String s : shopping){
+            if(place.getType().contains(s)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isEntertainment(Places place, String[] entertainment) {
+        for(String s : entertainment){
+            if(place.getType().contains(s)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isFoodDrink(Places place, String[] foodDrink) {
+        for(String s : foodDrink){
+            if(place.getType().contains(s)){
+              return true;
+            }
+        }
+        return false;
     }
 }

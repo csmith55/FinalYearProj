@@ -53,6 +53,14 @@
                 android:value="app.com.project.csmith.finalyearproject.MainActivity" />
         </activity>
         <activity
+            android:name="app.com.project.csmith.finalyearproject.PlacesActivity"
+            android:label="@string/title_activity_detail"
+            android:parentActivityName="app.com.project.csmith.finalyearproject.DetailActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="app.com.project.csmith.finalyearproject.DetailActivity" />
+        </activity>
+        <activity
             android:name="app.com.project.csmith.finalyearproject.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName="app.com.project.csmith.finalyearproject.MainActivity">
