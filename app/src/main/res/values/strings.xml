@@ -26,7 +26,13 @@
     <string name="pictures">pictures</string>
     <string name="get_started">Log in to get started!</string>
     <string name="Checkins">New Text</string>
-    <string name="GetInTouch">New Button</string>
+    <string name="GetInTouch">Get In Touch!</string>
     <string name="UserLocation">Medium Text</string>
+    <string name="BlueMarkers">Services</string>
+    <string name="GreenMarker">Entertainment</string>
+    <string name="VioletMarker">Food &amp; Drink</string>
+    <string name="Magenta">Shopping</string>
+    <string name="CyanMarker">Health</string>
+    <string name="OrangeMarker">Places</string>
 
 </resources>

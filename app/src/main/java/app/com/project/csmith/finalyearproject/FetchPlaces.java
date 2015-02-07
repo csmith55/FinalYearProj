@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -19,20 +20,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
     private final String LOG_TAG = FetchPlaces.class.getSimpleName();
     private GoogleMap googleMap;
+    private ArrayList<Marker> entertainmentMarkers = new ArrayList<>();
+    private ArrayList<Marker> foodDrinkMarkers = new ArrayList<>();
+    private ArrayList<Marker> shoppingMarkers = new ArrayList<>();
+    private ArrayList<Marker> healthBeautyMarkers = new ArrayList<>();
+    private ArrayList<Marker> servicesMarkers = new ArrayList<>();
+    private ArrayList<Marker> otherMarkers = new ArrayList<>();
     String[] foodDrink = {"cafe","bar","meal_delivery","meal_takeaway","restaurant", "food","bakery"};
-
     String[] entertainment = {"amusement_park","bowling_alley","casino","gym","movie_rental","movie_theater","night_club","stadium","aquarium","zoo"};
-
     String[] shopping = {"bicycle_store","book_store", "clothing_store", "convenience_store", "department_store", "electronics_store", "florist", "furniture_store", "grocery_or_supermarket", "hardware_store", "home_goods_store", "jewelry_store", "liquor_store", "pet_store", "shopping_mall", "shoe_store", "store"};
-
-
     String[] healthBeauty = {"beauty_salon", "dentist", "doctor", "hair_care", "health", "hospital", "pharmacy", "physiotherapist", "spa", "veterinary_care"};
-
     String[] services = {"atm", "bank", "bus_station", "car_rental", "car_dealer" ,"car_repair", "car_wash", "electrician", "fire_station", "gas_station", "laundry", "library", "lodging", "plumber", "police", "real_estate_agency", "subway_station", "taxi_stand", "train_station", "travel_agency"};
 
 
@@ -167,54 +170,61 @@ public class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
     @Override
     protected void onPostExecute(Places[] places) {
-
-
-        for(Places place:places){
+        for(int i = 0; i < places.length; i++){
+            Places place = places[i];
 
             if(isFoodDrink(place, foodDrink)){
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
                         .title(place.getName())
-                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)).visible(false));
+               foodDrinkMarkers.add(marker);
 
             }
 
             else if(isEntertainment(place, entertainment)){
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
                         .title(place.getName())
-                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).visible(false));
+                entertainmentMarkers.add(marker);
 
             }
 
             else if(isShopping(place, shopping)){
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
                         .title(place.getName())
-                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
-
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)).visible(false));
+                shoppingMarkers.add(marker);
 
             }
 
             else if(isHealthBeauty(place, healthBeauty)){
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
                         .title(place.getName())
-                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)).visible(false));
+                healthBeautyMarkers.add(marker);
             }
 
             else if(isService(place, services)){
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
                         .title(place.getName())
-                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)).visible(false));
+                servicesMarkers.add(marker);
             }
             else {
-                googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
+                Marker marker = googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(),place.getLng()))
                         .title(place.getName())
-                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).visible(false));
+                otherMarkers.add(marker);
             }
+
+
 
 
         }
     }
+
+
 
     private boolean isService(Places place, String[] services) {
         for (String s : services){
@@ -259,5 +269,90 @@ public class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
             }
         }
         return false;
+    }
+
+
+    public void loopServices() {
+        for(Marker marker : getServicesMarkers()){
+            marker.setVisible(!marker.isVisible());
+        }
+    }
+
+    public void loopHealth() {
+        for(Marker marker : getHealthBeautyMarkers()){
+            marker.setVisible(!marker.isVisible());
+        }
+    }
+
+    public void loopEntertainment() {
+        for(Marker marker : getEntertainmentMarkers()){
+            marker.setVisible(!marker.isVisible());
+        }
+    }
+
+    public void loopShopping() {
+        for(Marker marker : getShoppingMarkers()){
+            marker.setVisible(!marker.isVisible());
+        }
+    }
+
+    public void loopOthers() {
+        for(Marker marker : getOtherMarkers()){
+            marker.setVisible(!marker.isVisible());
+        }
+    }
+
+    public void loopFoodDrink() {
+        for(Marker marker : getFoodDrinkMarkers()){
+            marker.setVisible(!marker.isVisible());
+        }
+    }
+
+    public ArrayList<Marker> getEntertainmentMarkers() {
+        return entertainmentMarkers;
+    }
+
+    public void setEntertainmentMarkers(ArrayList<Marker> entertainmentMarkers) {
+        this.entertainmentMarkers = entertainmentMarkers;
+    }
+
+    public ArrayList<Marker> getFoodDrinkMarkers() {
+        return foodDrinkMarkers;
+    }
+
+    public void setFoodDrinkMarkers(ArrayList<Marker> foodDrinkMarkers) {
+        this.foodDrinkMarkers = foodDrinkMarkers;
+    }
+
+    public ArrayList<Marker> getShoppingMarkers() {
+        return shoppingMarkers;
+    }
+
+    public void setShoppingMarkers(ArrayList<Marker> shoppingMarkers) {
+        this.shoppingMarkers = shoppingMarkers;
+    }
+
+    public ArrayList<Marker> getHealthBeautyMarkers() {
+        return healthBeautyMarkers;
+    }
+
+    public void setHealthBeautyMarkers(ArrayList<Marker> healthBeautyMarkers) {
+        this.healthBeautyMarkers = healthBeautyMarkers;
+    }
+
+    public ArrayList<Marker> getServicesMarkers() {
+        return servicesMarkers;
+    }
+
+    public void setServicesMarkers(ArrayList<Marker> servicesMarkers) {
+        this.servicesMarkers = servicesMarkers;
+    }
+
+    public ArrayList<Marker> getOtherMarkers() {
+        return otherMarkers;
+    }
+
+    public void setOtherMarkers(ArrayList<Marker> otherMarkers) {
+        this.otherMarkers = otherMarkers;
     }
 }

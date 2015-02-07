@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,6 +38,7 @@ import java.util.Locale;
  * Created by csmith on 06/02/15.
  */
 public class PlacesActivity extends Activity {
+
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -69,8 +72,23 @@ public class PlacesActivity extends Activity {
     }
 
 
+
+
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static class PlacesFragment extends Fragment {
+    public static class PlacesFragment extends Fragment implements View.OnClickListener{
+
+        FetchPlaces fetchPlaces = new FetchPlaces();
+        Button blueButton;
+        Button cyanButton;
+        Button greenButton;
+        Button orangeButton;
+        Button magentaButton;
+        Button violetButton;
+
+        boolean blueClicked, cyanClicked, greenClicked, orangeClicked, magentaClicked, violetClicked;
+
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -109,6 +127,21 @@ public class PlacesActivity extends Activity {
                 }
 
                 ((TextView) rootView.findViewById(R.id.userLoc)).setText(addresses.get(0).getAddressLine(0) + addresses.get(0).getAddressLine(1) + addresses.get(0).getAddressLine(2));
+                 blueButton = (Button) rootView.findViewById(R.id.blueMarker);
+                 cyanButton = (Button) rootView.findViewById(R.id.cyanMarker);
+                 greenButton = (Button) rootView.findViewById(R.id.greenMarker);
+                 orangeButton = (Button) rootView.findViewById(R.id.orangeMarker);
+                 magentaButton = (Button) rootView.findViewById(R.id.magentaMarker);
+                 violetButton = (Button) rootView.findViewById(R.id.violetMarker);
+
+
+                blueButton.setOnClickListener(this);
+                cyanButton.setOnClickListener(this);
+                greenButton.setOnClickListener(this);
+                orangeButton.setOnClickListener(this);
+                magentaButton.setOnClickListener(this);
+                violetButton.setOnClickListener(this);
+
 
 
 
@@ -121,12 +154,59 @@ public class PlacesActivity extends Activity {
                 Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(friendsLat, friendsLng)));
                 marker.showInfoWindow();
 
-                FetchPlaces fetchPlaces = new FetchPlaces();
                 fetchPlaces.execute(map);
             }
 
             return rootView;
         }
+
+        @Override
+        public void onClick(View view){
+            filterColours(view);
+
+        }
+
+        public void filterColours(View v) {
+            int id = v.getId();
+            if(id == R.id.blueMarker){
+                blueClicked = !blueClicked;
+                if(blueClicked) blueButton.setBackgroundColor(Color.BLUE);
+                else blueButton.setBackgroundColor(Color.BLACK);
+                fetchPlaces.loopServices();
+            }
+            else if(id == R.id.cyanMarker){
+                cyanClicked = !cyanClicked;
+                if(cyanClicked) cyanButton.setBackgroundColor(Color.CYAN);
+                else cyanButton.setBackgroundColor(Color.BLACK);
+                fetchPlaces.loopHealth();
+            }
+            else if(id == R.id.greenMarker){
+                greenClicked = !greenClicked;
+                if(greenClicked) greenButton.setBackgroundColor(Color.GREEN);
+                else greenButton.setBackgroundColor(Color.BLACK);
+                fetchPlaces.loopEntertainment();
+            }
+            else if(id == R.id.magentaMarker){
+                magentaClicked = !magentaClicked;
+                if(magentaClicked) magentaButton.setBackgroundColor(Color.MAGENTA);
+                else magentaButton.setBackgroundColor(Color.BLACK);
+                fetchPlaces.loopShopping();
+            }
+            else if(id == R.id.orangeMarker){
+                orangeClicked = !orangeClicked;
+                if(orangeClicked) orangeButton.setBackgroundColor(Color.rgb(255,165,0));
+                else orangeButton.setBackgroundColor(Color.BLACK);
+                fetchPlaces.loopOthers();
+            }
+            else {
+                violetClicked = !violetClicked;
+                if(violetClicked) violetButton.setBackgroundColor(Color.rgb(238,130,238));
+                else violetButton.setBackgroundColor(Color.BLACK);
+                fetchPlaces.loopFoodDrink();
+            }
+        }
+
+
 
         private MapFragment getMapFragment() {
             android.app.FragmentManager fm = null;
@@ -178,5 +258,7 @@ public class PlacesActivity extends Activity {
             locationManager.removeUpdates(locationListener);
             return lastKnown;
         }
+
+
     }
 }
