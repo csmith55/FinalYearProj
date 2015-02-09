@@ -23,7 +23,6 @@
     <string name="pref_queryType_key" translatable="false">units</string>
     <string name="pref_queryType_range" translatable="false">Range Friends</string>
     <string name="pref_queryType_nearest" translatable="false">Nearest Friends</string>
-    <string name="pictures">pictures</string>
     <string name="get_started">Log in to get started!</string>
     <string name="Checkins">New Text</string>
     <string name="GetInTouch">Get In Touch!</string>
@@ -34,5 +33,6 @@
     <string name="Magenta">Shopping</string>
     <string name="CyanMarker">Health</string>
     <string name="OrangeMarker">Places</string>
+    <string name="splash">splash</string>
 
 </resources>

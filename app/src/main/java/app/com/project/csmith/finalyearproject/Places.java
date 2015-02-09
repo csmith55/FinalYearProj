@@ -22,7 +22,7 @@ public class Places {
         return lng;
     }
 
-    public void setLng(double lng) {
+    private void setLng(double lng) {
         this.lng = lng;
     }
 
@@ -30,7 +30,7 @@ public class Places {
         return lat;
     }
 
-    public void setLat(double lat) {
+    private void setLat(double lat) {
         this.lat = lat;
     }
 
@@ -38,7 +38,7 @@ public class Places {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -46,7 +46,7 @@ public class Places {
         return type;
     }
 
-    public void setType(String type) {
+    private void setType(String type) {
         this.type = type;
     }
 }

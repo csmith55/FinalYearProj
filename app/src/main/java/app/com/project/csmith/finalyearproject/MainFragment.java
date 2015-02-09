@@ -41,17 +41,17 @@ public class MainFragment extends android.support.v4.app.Fragment {
     private static final String TAG = "MainFragment";
     private static final String FBPICS = "FBPICS";
     private static final String FBNAMES = "FBNAMES";
-    private static String[] fakeLocations = {"BT10 0GR \nDistance: 100", "CastleCourt \nDistance: 150", "Lisburn \nDistance: 600", "BT7 1LQ \nDistance: 1500", "BT25 3PL \nDistance: 2500", "Aviva Stadium \nDistance: 3500"};
-    protected ArrayAdapter<String> profileName;
-    private Session.StatusCallback callback = new Session.StatusCallback() {
+    private static final String[] fakeLocations = {"BT10 0GR \nDistance: 100", "CastleCourt \nDistance: 150", "Lisburn \nDistance: 600", "BT7 1LQ \nDistance: 1500", "BT25 3PL \nDistance: 2500", "Aviva Stadium \nDistance: 3500"};
+    private final Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
-            onSessionStateChange(session, state, exception);
+            onSessionStateChange(state);
         }
     };
+    private final ArrayList<String> profilePics = new ArrayList<>();
+    private ArrayAdapter<String> profileName;
     private UiLifecycleHelper uiHelper;
-    private ArrayList<String> profilePics = new ArrayList<String>();
-    private LocationManager locationManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,14 +100,19 @@ public class MainFragment extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         final Location lastKnown = getLocation();
 
-
-        LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
-        authButton.setFragment(this);
-        authButton.setReadPermissions(Arrays.asList("user_friends"));
+        fbPermissionsLogin(view);
 
         // Find the user's profile picture custom view
         // Get a reference to the ListView, and attach this adapter to it.
 
+        setAdapterAndIntents(view, lastKnown);
+
+
+        return view;
+
+    }
+
+    private void setAdapterAndIntents(View view, final Location lastKnown) {
         ListView listView = (ListView) view.findViewById(R.id.listview_friend);
         listView.setAdapter(profileName);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -115,24 +120,30 @@ public class MainFragment extends android.support.v4.app.Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                String name = profileName.getItem(position);
-                Intent intent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(FBNAMES, name);
-                intent.putExtra(FBPICS, profilePics.get(position));
-                intent.putExtra("UserLng", lastKnown.getLongitude());
-                intent.putExtra("UserLat", lastKnown.getLatitude());
-                startActivity(intent);
+                createDetailActivityIntent(position, lastKnown);
             }
         });
-
-
-        return view;
-
     }
 
-    public Location getLocation() {
+    private void createDetailActivityIntent(int position, Location lastKnown) {
+        String name = profileName.getItem(position);
+        Intent intent = new Intent(getActivity(), DetailActivity.class)
+                .putExtra(FBNAMES, name);
+        intent.putExtra(FBPICS, profilePics.get(position));
+        intent.putExtra("UserLng", lastKnown.getLongitude());
+        intent.putExtra("UserLat", lastKnown.getLatitude());
+        startActivity(intent);
+    }
+
+    private void fbPermissionsLogin(View view) {
+        LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
+        authButton.setFragment(this);
+        authButton.setReadPermissions(Arrays.asList("user_friends"));
+    }
+
+    private Location getLocation() {
         String locationProvider = LocationManager.NETWORK_PROVIDER;
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -155,13 +166,11 @@ public class MainFragment extends android.support.v4.app.Fragment {
             }
         };
 
-        locationManager.requestLocationUpdates(locationProvider,0,0,locationListener);
+        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
 
         final Location lastKnown = locationManager.getLastKnownLocation(locationProvider);
         //When finished!!
         // locationManager.removeUpdates(locationListener);
-
-
 
 
         locationManager.removeUpdates(locationListener);
@@ -174,7 +183,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
         Session session = Session.getActiveSession();
         if (session != null &&
                 (session.isOpened() || session.isClosed())) {
-            onSessionStateChange(session, session.getState(), null);
+            onSessionStateChange(session.getState());
         }
 
         uiHelper.onResume();
@@ -205,7 +214,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
         uiHelper.onSaveInstanceState(outState);
     }
 
-    private void onSessionStateChange(final Session session, SessionState state, Exception exception) {
+    private void onSessionStateChange(SessionState state) {
         if (state.isOpened()) {
             Log.i(TAG, "Logged in!");
             updateFriends();
@@ -215,7 +224,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
         }
     }
 
-    public void makeMeRequest(final Session session) {
+    private void makeMeRequest(final Session session) {
         // Make an API call to get user data and define a
         // new callback to handle the response.
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -238,82 +247,16 @@ public class MainFragment extends android.support.v4.app.Fragment {
                                 // userNameView.setText(user.getName());
                                 profileName.clear();
                                 profilePics.clear();
-                                ProfilePictureView profilePictureView = null;
+
 
                                 if (type.contains("Nearest Friend")) {
-                                    int numOfFriends = Integer.parseInt(value);
-                                    if (numOfFriends > graphUsers.size())
-                                        numOfFriends = graphUsers.size();
-                                    for (int i = 0; i < numOfFriends; i++) {
-
-
-                                        profileName.add(graphUsers.get(i).getName() + "\nLocation: " + fakeLocations[i]);
-                                        profilePics.add(graphUsers.get(i).getId());
-
-                                        switch (i) {
-                                            case 0:
-                                                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic0);
-                                                break;
-                                            case 1:
-                                                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic1);
-                                                break;
-                                            case 2:
-                                                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic2);
-                                                break;
-                                            case 3:
-                                                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic3);
-                                                break;
-                                            case 4:
-                                                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic4);
-                                                break;
-                                        }
-
-
-                                        profilePictureView.setProfileId(graphUsers.get(i).getId());
-                                        profilePictureView.setCropped(true);
-
-                                    }
+                                    nearestFriendsQuery(graphUsers, value);
                                 } else {
-                                    for (int i = 0; i < graphUsers.size(); i++) {
-
-                                        String[] split = fakeLocations[i].split("Distance: ");
-                                        String distance = split[1];
-                                        int distanceOfFriend = Integer.parseInt(distance);
-                                        int maxDistance = Integer.parseInt(value);
-                                        if (distanceOfFriend <= maxDistance) {
-                                            profileName.add(graphUsers.get(i).getName() + "\nLocation: " + fakeLocations[i]);
-                                            profilePics.add(graphUsers.get(i).getId());
-
-                                            switch (i) {
-                                                case 0:
-                                                    profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic0);
-                                                    break;
-                                                case 1:
-                                                    profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic1);
-                                                    break;
-                                                case 2:
-                                                    profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic2);
-                                                    break;
-                                                case 3:
-                                                    profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic3);
-                                                    break;
-                                                case 4:
-                                                    profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic4);
-                                                    break;
-                                            }
-
-
-                                            profilePictureView.setProfileId(graphUsers.get(i).getId());
-                                            profilePictureView.setCropped(true);
-                                        }
-
-                                    }
+                                    rangeFriendsQuery(graphUsers, value);
                                 }
                             }
                         }
-                        if (response.getError() != null) {
-                            // Handle errors, will do so later.
-                        }
+
                     }
 
 
@@ -321,6 +264,61 @@ public class MainFragment extends android.support.v4.app.Fragment {
         request.executeAsync();
 
 
+    }
+
+    private void rangeFriendsQuery(List<GraphUser> graphUsers, String value) {
+
+        for (int i = 0; i < graphUsers.size(); i++) {
+
+            String[] split = fakeLocations[i].split("Distance: ");
+            String distance = split[1];
+            int distanceOfFriend = Integer.parseInt(distance);
+            int maxDistance = Integer.parseInt(value);
+            if (distanceOfFriend <= maxDistance) {
+                addFriendToResults(graphUsers, i);
+            }
+
+        }
+    }
+
+    private void addFriendToResults(List<GraphUser> graphUsers, int i) {
+        ProfilePictureView profilePictureView = null;
+        profileName.add(graphUsers.get(i).getName() + "\nLocation: " + fakeLocations[i]);
+        profilePics.add(graphUsers.get(i).getId());
+
+        switch (i) {
+            case 0:
+                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic0);
+                break;
+            case 1:
+                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic1);
+                break;
+            case 2:
+                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic2);
+                break;
+            case 3:
+                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic3);
+                break;
+            case 4:
+                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic4);
+                break;
+        }
+
+
+        assert profilePictureView != null;
+        profilePictureView.setProfileId(graphUsers.get(i).getId());
+        profilePictureView.setCropped(true);
+
+    }
+
+    private void nearestFriendsQuery(List<GraphUser> graphUsers, String value) {
+
+        int numOfFriends = Integer.parseInt(value);
+        if (numOfFriends > graphUsers.size())
+            numOfFriends = graphUsers.size();
+        for (int i = 0; i < numOfFriends; i++) {
+            addFriendToResults(graphUsers, i);
+        }
     }
 
 }

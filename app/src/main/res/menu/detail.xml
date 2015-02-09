@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:textColor="#1abc9c"
     android:textStyle="italic"
     android:typeface="serif"
@@ -7,11 +8,11 @@
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_settings" />
     <item
         android:id="@+id/action_map"
         android:orderInCategory="100"
-        android:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:title="@string/action_map" />
 </menu>

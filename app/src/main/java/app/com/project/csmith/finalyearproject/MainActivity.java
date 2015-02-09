@@ -44,32 +44,52 @@ public class MainActivity extends FragmentActivity {
 
     private static final int SETTINGS = 2;
     private static final int FRAGMENT_COUNT = SETTINGS + 1;
-    private Fragment[] fragments = new Fragment[FRAGMENT_COUNT];
+    private final Fragment[] fragments = new Fragment[FRAGMENT_COUNT];
     private static final int SPLASH = 0;
     private static final int SELECTION = 1;
-    private static String APP_ID = "882702668415869";
-    private final String LOG_TAG = MainActivity.class.getSimpleName();
-    private MainFragment mainFragment;
-    private MenuItem settings;
-    private boolean isResumed = false;
 
-    private UiLifecycleHelper uiHelper;
-    private Session.StatusCallback callback =
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private final Session.StatusCallback callback =
             new Session.StatusCallback() {
                 @Override
                 public void call(Session session,
                                  SessionState state, Exception exception) {
-                    onSessionStateChange(session, state, exception);
+                    onSessionStateChange(state);
                 }
             };
-
+    private MenuItem settings;
+    private boolean isResumed = false;
+    private UiLifecycleHelper uiHelper;
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //getKeyHashForFacebook();
+        uiHelper = new UiLifecycleHelper(this, callback);
+        uiHelper.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        setFragments();
 
+
+    }
+
+    private void setFragments() {
+        FragmentManager fm = getSupportFragmentManager();
+        getFragments()[SPLASH] = fm.findFragmentById(R.id.splashFragment);
+        getFragments()[SELECTION] = fm.findFragmentById(R.id.selectionFragment);
+        getFragments()[SETTINGS] = fm.findFragmentById(R.id.userSettingsFragment);
+
+
+        FragmentTransaction transaction = fm.beginTransaction();
+        for (int i = 0; i < getFragments().length; i++) {
+            transaction.hide(getFragments()[i]);
+        }
+        transaction.commit();
+    }
+
+    private void getKeyHashForFacebook() {
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     "app.com.project.csmith.finalyearproject", PackageManager.GET_SIGNATURES);
@@ -79,26 +99,10 @@ public class MainActivity extends FragmentActivity {
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
 
             }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
+            Log.d(LOG_TAG, "Name Not Found Exception");
 
         }
-        uiHelper = new UiLifecycleHelper(this, callback);
-        uiHelper.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        FragmentManager fm = getSupportFragmentManager();
-        getFragments()[SPLASH] = fm.findFragmentById(R.id.splashFragment);
-        getFragments()[SELECTION] = fm.findFragmentById(R.id.selectionFragment);
-        getFragments()[SETTINGS] = fm.findFragmentById(R.id.userSettingsFragment);
-
-        FragmentTransaction transaction = fm.beginTransaction();
-        for (int i = 0; i < getFragments().length; i++) {
-            transaction.hide(getFragments()[i]);
-        }
-        transaction.commit();
-
-
     }
 
     @Override
@@ -143,7 +147,7 @@ public class MainActivity extends FragmentActivity {
 
     //Taken from Facebook developers example
 
-    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+    private void onSessionStateChange(SessionState state) {
         // Only make changes if the activity is visible
         if (isResumed) {
             FragmentManager manager = getSupportFragmentManager();
@@ -153,15 +157,19 @@ public class MainActivity extends FragmentActivity {
             for (int i = 0; i < backStackSize; i++) {
                 manager.popBackStack();
             }
-            if (state.isOpened()) {
-                // If the session state is open:
-                // Show the authenticated fragment
-                showFragment(SELECTION, false);
-            } else if (state.isClosed()) {
-                // If the session state is closed:
-                // Show the login fragment
-                showFragment(SPLASH, false);
-            }
+            showAppropiateFragment(state);
+        }
+    }
+
+    private void showAppropiateFragment(SessionState state) {
+        if (state.isOpened()) {
+            // If the session state is open:
+            // Show the authenticated fragment
+            showFragment(SELECTION, false);
+        } else if (state.isClosed()) {
+            // If the session state is closed:
+            // Show the login fragment
+            showFragment(SPLASH, false);
         }
     }
 
@@ -224,7 +232,4 @@ public class MainActivity extends FragmentActivity {
         return fragments;
     }
 
-    public void setFragments(Fragment[] fragments) {
-        this.fragments = fragments;
-    }
 }
