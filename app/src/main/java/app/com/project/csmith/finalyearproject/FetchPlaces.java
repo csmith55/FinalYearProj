@@ -1,6 +1,5 @@
 package app.com.project.csmith.finalyearproject;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -14,12 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
@@ -49,9 +42,6 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
     private Places[] getPlacesFromJson(String placesJson)
             throws JSONException {
 
-//        android.os.Debug.waitForDebugger();
-
-
         final String RESULTS = "results";
         final String GEOMETRY = "geometry";
         final String NAME = "name";
@@ -77,13 +67,15 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
             double lng = jsonPlace.getJSONObject(GEOMETRY).getJSONObject("location").getDouble("lng");
             String name = jsonPlace.getString(NAME);
             String type = jsonPlace.getString(TYPES);
+            String placeId = jsonPlace.getString("place_id");
 
 
-            pArray[i] = new Places(lat, lng, name, type);
+            pArray[i] = new Places(lat, lng, name, type, placeId);
 
 
         }
     }
+
 
     @Override
     protected Places[] doInBackground(GoogleMap... params) {
@@ -91,56 +83,10 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
         googleMap = params[0];
 
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
 
 
-        String placesJsonString = null;
 
-
-        try {
-
-            Uri builtUri = buildUri();
-
-            urlConnection = getHttpURLConnection(builtUri);
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder builder = new StringBuilder();
-            if (inputStream == null) {
-
-                return null;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-
-                builder.append(line).append("\n");
-            }
-
-            if (builder.length() == 0) {
-
-                return null;
-            }
-            placesJsonString = builder.toString();
-
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error ", e);
-            return null;
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error closing stream", e);
-                }
-            }
-        }
-
+        String placesJsonString = UrlUtility.makeConnection(null);
         try {
             return getPlacesFromJson(placesJsonString);
         } catch (JSONException e) {
@@ -151,60 +97,27 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
         return null;
     }
 
-    private HttpURLConnection getHttpURLConnection(Uri builtUri) throws IOException {
-        URL url = new URL(builtUri.toString());
-
-        Log.v(LOG_TAG, "Built URI " + builtUri.toString());
-
-
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.setRequestMethod("GET");
-        urlConnection.connect();
-        return urlConnection;
-    }
-
-    private Uri buildUri() {
-        String longLat = "54.564169, -6.0012803";
-
-        final String PLACES_URL =
-                "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-        final String KEY = "AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
-        final String RADIUS = "500";
-
-
-        final String KEY_PARAM = "key";
-        final String LOCATION_PARAM = "location";
-        final String RADIUS_PARAM = "radius";
-
-        return Uri.parse(PLACES_URL).buildUpon()
-                .appendQueryParameter(LOCATION_PARAM, longLat)
-                .appendQueryParameter(RADIUS_PARAM, RADIUS)
-                .appendQueryParameter(KEY_PARAM, KEY)
-                .build();
-    }
-
-
     @Override
     protected void onPostExecute(Places[] places) {
         Marker marker;
 
         for (Places place : places) {
 
-            if (isFoodDrink(place, foodDrink)) {
+            if (containsPlace(place, foodDrink)) {
                 marker = addMarkerToMap(place, BitmapDescriptorFactory.HUE_VIOLET);
                 foodDrinkMarkers.add(marker);
 
-            } else if (isEntertainment(place, entertainment)) {
+            } else if (containsPlace(place, entertainment)) {
                 marker = addMarkerToMap(place, BitmapDescriptorFactory.HUE_GREEN);
                 entertainmentMarkers.add(marker);
-            } else if (isShopping(place, shopping)) {
+            } else if (containsPlace(place, shopping)) {
                 marker = addMarkerToMap(place, BitmapDescriptorFactory.HUE_MAGENTA);
                 shoppingMarkers.add(marker);
 
-            } else if (isHealthBeauty(place, healthBeauty)) {
+            } else if (containsPlace(place, healthBeauty)) {
                 marker = addMarkerToMap(place, BitmapDescriptorFactory.HUE_CYAN);
                 healthBeautyMarkers.add(marker);
-            } else if (isService(place, services)) {
+            } else if (containsPlace(place, services)) {
                 marker = addMarkerToMap(place, BitmapDescriptorFactory.HUE_AZURE);
                 servicesMarkers.add(marker);
             } else {
@@ -224,51 +137,16 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
     }
 
-
-    private boolean isService(Places place, String[] services) {
-        for (String s : services) {
-            if (place.getType().contains(s)) {
+    private boolean containsPlace(Places place, String[] listedTypes){
+        for (String s : listedTypes){
+            if (place.getType().contains(s)){
                 return true;
             }
+
         }
         return false;
     }
 
-    private boolean isHealthBeauty(Places place, String[] healthBeauty) {
-        for (String s : healthBeauty) {
-            if (place.getType().contains(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isShopping(Places place, String[] shopping) {
-        for (String s : shopping) {
-            if (place.getType().contains(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isEntertainment(Places place, String[] entertainment) {
-        for (String s : entertainment) {
-            if (place.getType().contains(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isFoodDrink(Places place, String[] foodDrink) {
-        for (String s : foodDrink) {
-            if (place.getType().contains(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 
     public void loopServices() {

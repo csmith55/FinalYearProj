@@ -34,5 +34,9 @@
     <string name="CyanMarker">Health</string>
     <string name="OrangeMarker">Places</string>
     <string name="splash">splash</string>
+    <string name="PlaceName">Medium Text</string>
+    <string name="website">Medium Text</string>
+    <string name="phoneNumber">Medium Text</string>
+    <string name="Go">New Button</string>
 
 </resources>

@@ -173,7 +173,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
         // locationManager.removeUpdates(locationListener);
 
 
-        locationManager.removeUpdates(locationListener);
+
+
         return lastKnown;
     }
 
