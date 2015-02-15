@@ -3,6 +3,7 @@ package app.com.project.csmith.finalyearproject;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,7 +58,11 @@ public class PlaceDetailsFragment extends android.app.Fragment {
             ((TextView) rootView.findViewById(R.id.placeWebsite)).setText(place.getWebsite());
 
             ((TextView) rootView.findViewById(R.id.placeNumber)).setText(place.getPhoneNumber());
-            ((TextView) rootView.findViewById(R.id.placeRating)).setText(String.valueOf(place.getReviewRating()));
+            TextView textView = (TextView) rootView.findViewById(R.id.placeRating);
+            textView.setText(String.valueOf(place.getReviewRating()));
+            if(place.getReviewRating() < 3) textView.setTextColor(Color.RED);
+            else if (place.getReviewRating() >= 4) textView.setTextColor(Color.GREEN);
+            else textView.setTextColor(Color.rgb(255, 165, 0));
             new GetImageViaUrl((ImageView) rootView.findViewById(R.id.placeIcon)).execute(place.getImage());
 
              listView = (ListView) rootView.findViewById(R.id.placeReviews);
