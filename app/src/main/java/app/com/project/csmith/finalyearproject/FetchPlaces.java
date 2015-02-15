@@ -22,8 +22,12 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
     private GoogleMap googleMap;
     private ArrayList<Marker> entertainmentMarkers, foodDrinkMarkers, shoppingMarkers, healthBeautyMarkers, servicesMarkers;
     private ArrayList<Marker> otherMarkers = new ArrayList<>();
+    private Places[] pArray;
+    private Places currentPlace;
 
     public FetchPlaces() {
+
+
         entertainmentMarkers = new ArrayList<>();
         foodDrinkMarkers = new ArrayList<>();
         shoppingMarkers = new ArrayList<>();
@@ -50,7 +54,7 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
         JSONObject places = new JSONObject(placesJson);
         JSONArray placesArray = places.getJSONArray(RESULTS);
 
-        Places[] pArray = new Places[placesArray.length()];
+        pArray = new Places[placesArray.length()];
 
         getJsonLocationData(GEOMETRY, NAME, TYPES, placesArray, pArray);
 
@@ -99,6 +103,9 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
     @Override
     protected void onPostExecute(Places[] places) {
+
+
+
         Marker marker;
 
         for (Places place : places) {
@@ -127,10 +134,25 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
 
         }
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if(pArray != null) {
+                    for (Places place : pArray) {
+                        if (marker.getTitle().equals(place.getName())) {
+                            setCurrentPlace(place);
+                        }
+                    }
+                }
+                return false;
+            }
+        });
     }
 
 
-    private Marker addMarkerToMap(Places place, float colour) {
+    private Marker addMarkerToMap(final Places place, float colour) {
+
         return googleMap.addMarker(new MarkerOptions().position(new LatLng(place.getLat(), place.getLng()))
                 .title(place.getName())
                 .snippet(place.getType()).icon(BitmapDescriptorFactory.defaultMarker(colour)).visible(false));
@@ -231,5 +253,13 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
     public void setOtherMarkers(ArrayList<Marker> otherMarkers) {
         this.otherMarkers = otherMarkers;
+    }
+
+    public void setCurrentPlace(Places currentPlace) {
+        this.currentPlace = currentPlace;
+    }
+
+    public Places getCurrentPlace() {
+        return currentPlace;
     }
 }

@@ -28,27 +28,42 @@ public class FetchDetails extends AsyncTask<Places,Void,Places> {
         return null;
     }
 
+
     private Places getDetailsFromJson(String jsonDetailsString) throws JSONException {
 
         JSONObject placeDetails = new JSONObject(jsonDetailsString);
 
-        double rating = placeDetails.getDouble("rating");
-        String website = placeDetails.getString("website");
-        String icon = placeDetails.getString("icon");
-        String phoneNumber = placeDetails.getString("international_phone_number");
+        double rating = 0;
+        if(placeDetails.getJSONObject("result").has("rating")) {
+             rating = placeDetails.getJSONObject("result").getDouble("rating");
+        }
+        String website = null;
+        if(placeDetails.getJSONObject("result").has("website")) {
+             website = placeDetails.getJSONObject("result").getString("website");
+        }
+        String icon = null;
+        if(placeDetails.getJSONObject("result").has("icon")) {
+             icon = placeDetails.getJSONObject("result").getString("icon");
+        }
+        String phoneNumber = null;
+        if(placeDetails.getJSONObject("result").has("international_phone_number")) {
+             phoneNumber = placeDetails.getJSONObject("result").getString("international_phone_number");
+        }
+        Reviews[] reviews = new Reviews[0];
+        if(placeDetails.getJSONObject("result").has("reviews")) {
+            JSONArray reviewsArray = placeDetails.getJSONObject("result").getJSONArray("reviews");
+             reviews = new Reviews[reviewsArray.length()];
 
-        JSONArray reviewsArray = placeDetails.getJSONArray("reviews");
-        Reviews[] reviews = new Reviews[reviewsArray.length()];
+            for (int i = 0; i < reviewsArray.length(); i++) {
 
-        for (int i = 0; i < reviewsArray.length(); i++) {
+                JSONObject jsonReview = reviewsArray.getJSONObject(i);
+                String author = jsonReview.getString("author_name");
+                double authorRating = jsonReview.getDouble("rating");
+                String authorText = jsonReview.getString("text");
 
-            JSONObject jsonReview = reviewsArray.getJSONObject(i);
-            String author = jsonReview.getString("author_name");
-            double authorRating = jsonReview.getDouble("rating");
-            String authorText = jsonReview.getString("text");
+                reviews[i] = new Reviews(author, authorRating, authorText);
 
-           reviews[i] = new Reviews(author,authorRating,authorText);
-
+            }
         }
 
         place.setReviewRating(rating);
@@ -58,4 +73,7 @@ public class FetchDetails extends AsyncTask<Places,Void,Places> {
         place.setReviews(reviews);
         return place;
     }
+
+
+
 }

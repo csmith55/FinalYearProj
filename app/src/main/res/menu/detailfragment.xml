@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:textColor="#1abc9c"
     android:textStyle="italic"
-    android:typeface="serif">
+    android:typeface="serif"
+    tools:context="app.com.project.csmith.finalyearproject.PlaceDetailActivity">
+
     <item
         android:id="@+id/action_share"
-        android:actionProviderClass="android.widget.ShareActionProvider"
         app:showAsAction="always"
-        android:title="@string/action_share" />
+        android:title="Share"
+        android:actionProviderClass=
+            "android.widget.ShareActionProvider" />
+
 </menu>

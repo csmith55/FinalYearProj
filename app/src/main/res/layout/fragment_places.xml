@@ -10,9 +10,10 @@
         android:layout_height="369dp"
         class="com.google.android.gms.maps.MapFragment"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/button2"
+        android:layout_below="@+id/greenMarker" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -87,5 +88,13 @@
         android:layout_above="@+id/placesMap"
         android:layout_alignLeft="@+id/cyanMarker"
         android:layout_alignStart="@+id/cyanMarker" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/FindOutMore"
+        android:id="@+id/findOutMore"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

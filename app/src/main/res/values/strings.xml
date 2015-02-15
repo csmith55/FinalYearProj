@@ -38,5 +38,6 @@
     <string name="website">Medium Text</string>
     <string name="phoneNumber">Medium Text</string>
     <string name="Go">New Button</string>
+    <string name="FindOutMore">Find Out More</string>
 
 </resources>

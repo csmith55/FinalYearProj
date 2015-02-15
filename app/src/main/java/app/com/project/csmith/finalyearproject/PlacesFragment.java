@@ -39,7 +39,7 @@ import java.util.Locale;
 public class PlacesFragment extends Fragment implements View.OnClickListener {
 
     FetchPlaces fetchPlaces = new FetchPlaces();
-    Button blueButton, cyanButton, greenButton, orangeButton, magentaButton, violetButton;
+    Button blueButton, cyanButton, greenButton, orangeButton, magentaButton, violetButton, findOutMore;
 
     boolean blueClicked, cyanClicked, greenClicked, orangeClicked, magentaClicked, violetClicked;
 
@@ -86,6 +86,12 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
 
 
             GoogleMap map = getMapFragment().getMap();
+            map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+
+                }
+            });
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(friendsLat, friendsLng)).zoom(14).build(); // Creates a CameraPosition from the builder
@@ -107,6 +113,8 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
         orangeButton = (Button) rootView.findViewById(R.id.orangeMarker);
         magentaButton = (Button) rootView.findViewById(R.id.magentaMarker);
         violetButton = (Button) rootView.findViewById(R.id.violetMarker);
+        findOutMore = (Button) rootView.findViewById(R.id.findOutMore);
+
 
 
         blueButton.setOnClickListener(this);
@@ -115,6 +123,7 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
         orangeButton.setOnClickListener(this);
         magentaButton.setOnClickListener(this);
         violetButton.setOnClickListener(this);
+        findOutMore.setOnClickListener(this);
     }
 
     @Override
@@ -143,8 +152,16 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
             case (R.id.violetMarker):
                 filterVioletMarkers();
                 break;
+            case (R.id.findOutMore):
+                findOutMoreDetails();
         }
 
+    }
+
+    private void findOutMoreDetails() {
+        Intent intent = new Intent(getActivity(), PlaceDetailActivity.class)
+                .putExtra("Place", fetchPlaces.getCurrentPlace());
+        startActivity(intent);
     }
 
     private void filterVioletMarkers() {

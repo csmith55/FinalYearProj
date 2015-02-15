@@ -1,9 +1,12 @@
 package app.com.project.csmith.finalyearproject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by csmith on 05/02/15.
  */
-public class Places {
+public class Places implements Parcelable{
     private double lng;
     private double lat;
     private String name;
@@ -105,4 +108,49 @@ public class Places {
     public void setReviews(Reviews[] reviews) {
         this.reviews = reviews;
     }
+
+    protected Places(Parcel in) {
+        lng = in.readDouble();
+        lat = in.readDouble();
+        name = in.readString();
+        type = in.readString();
+        placeId = in.readString();
+        website = in.readString();
+        phoneNumber = in.readString();
+        reviewRating = in.readDouble();
+        image = in.readString();
+        reviews = (Reviews[]) in.readArray(Reviews.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(lng);
+        dest.writeDouble(lat);
+        dest.writeString(name);
+        dest.writeString(type);
+        dest.writeString(placeId);
+        dest.writeString(website);
+        dest.writeString(phoneNumber);
+        dest.writeDouble(reviewRating);
+        dest.writeString(image);
+        dest.writeArray(reviews);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Places> CREATOR = new Parcelable.Creator<Places>() {
+        @Override
+        public Places createFromParcel(Parcel in) {
+            return new Places(in);
+        }
+
+        @Override
+        public Places[] newArray(int size) {
+            return new Places[size];
+        }
+    };
 }

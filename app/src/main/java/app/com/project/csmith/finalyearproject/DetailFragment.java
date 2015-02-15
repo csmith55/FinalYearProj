@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.facebook.widget.ProfilePictureView;
@@ -167,24 +166,11 @@ public class DetailFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.detailfragment, menu);
 
 
-        // Retrieve the share menu item
-        MenuItem menuItem = menu.findItem(R.id.action_share);
 
-        // Get the provider and hold onto it to set/change the share intent.
-        ShareActionProvider mShareActionProvider =
-                (ShareActionProvider) menuItem.getActionProvider();
 
-        // Attach an intent to this ShareActionProvider.  You can update this at any time,
-        // like when the user selects a new piece of data they might like to share.
-        if (mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(createShareIntent());
-        } else {
-            Log.d(LOG_TAG, "Share Action Provider is null?");
-        }
+
     }
 
     @Override
