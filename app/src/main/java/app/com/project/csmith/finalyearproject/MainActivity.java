@@ -69,7 +69,7 @@ public class MainActivity extends FragmentActivity {
         //getKeyHashForFacebook();
         uiHelper = new UiLifecycleHelper(this, callback);
         uiHelper.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+       setContentView(R.layout.activity_main);
         setFragments();
 
 

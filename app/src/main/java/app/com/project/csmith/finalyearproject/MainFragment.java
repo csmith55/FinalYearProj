@@ -138,11 +138,11 @@ public class MainFragment extends android.support.v4.app.Fragment {
     private void fbPermissionsLogin(View view) {
         LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
         authButton.setFragment(this);
-        authButton.setReadPermissions(Arrays.asList("user_friends"));
+        authButton.setReadPermissions(Arrays.asList("user_friends","user_checkins"));
     }
 
     private Location getLocation() {
-        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        String locationProvider = LocationManager.GPS_PROVIDER;
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             @Override
