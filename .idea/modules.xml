@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FinalYearProj.iml" filepath="$PROJECT_DIR$/FinalYearProj.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/finalYearBackend/finalYearBackend.iml" filepath="$PROJECT_DIR$/finalYearBackend/finalYearBackend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/finalYearProjBackend/finalYearProjBackend.iml" filepath="$PROJECT_DIR$/finalYearProjBackend/finalYearProjBackend.iml" />
     </modules>
   </component>
 </project>

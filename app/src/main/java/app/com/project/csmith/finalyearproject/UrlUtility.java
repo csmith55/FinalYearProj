@@ -86,7 +86,7 @@ public  class UrlUtility {
         String longLat = "54.564169, -6.0012803";
         final String PLACES_URL =
                 "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-        final String KEY = "AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
+        final String KEY = "AIzaSyAyA9rBQZyqzPdK8Te2NtyP-qboFaPzrC8";
         final String RADIUS = "500";
 
 
@@ -103,7 +103,7 @@ public  class UrlUtility {
 
     private static Uri buildDetailsUri(String placeId) {
         final String detailsUrl = "https://maps.googleapis.com/maps/api/place/details/json?";
-        final String key = "AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
+        final String key = "AIzaSyAyA9rBQZyqzPdK8Te2NtyP-qboFaPzrC8";
 
         return Uri.parse(detailsUrl).buildUpon().appendQueryParameter("placeid",placeId).appendQueryParameter("key",key).build();
     }

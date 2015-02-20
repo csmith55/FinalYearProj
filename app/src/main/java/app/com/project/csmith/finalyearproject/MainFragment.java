@@ -142,12 +142,12 @@ public class MainFragment extends android.support.v4.app.Fragment {
     }
 
     private Location getLocation() {
-        String locationProvider = LocationManager.GPS_PROVIDER;
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                updateFriends();
+//                updateFriends();
             }
 
             @Override

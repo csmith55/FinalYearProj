@@ -1,6 +1,5 @@
 package app.com.project.csmith.finalyearproject;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,6 +41,7 @@ public class PlaceDetailsFragment extends android.app.Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_place_details, container, false);
         setView(rootView);
+        //new EndpointsAsyncTask().execute(new Pair<Context, String>(getActivity(), "Manfred"));
 
 
         Intent intent = getActivity().getIntent();
@@ -50,7 +50,7 @@ public class PlaceDetailsFragment extends android.app.Fragment {
             place = (Places) intent.getParcelableExtra("Place");
             FetchDetails fetchDetails = new FetchDetails();
             fetchDetails.execute(place);
-            ProgressDialog.show(getActivity(), "Loading", "Wait while loading...");
+
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

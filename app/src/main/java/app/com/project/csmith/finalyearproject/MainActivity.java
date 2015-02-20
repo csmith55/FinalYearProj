@@ -71,6 +71,7 @@ public class MainActivity extends FragmentActivity {
         uiHelper.onCreate(savedInstanceState);
        setContentView(R.layout.activity_main);
         setFragments();
+     //   new GcmRegistrationAsyncTask(this).execute();
 
 
     }

@@ -40,7 +40,7 @@ public class DetailFragment extends Fragment {
     private String locationString;
     private String text[] = new String[1];
     private int PROXIMITY_RADIUS = 500;
-    private String GOOGLE_API_KEY = "AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
+    private String GOOGLE_API_KEY = "AIzaSyAyA9rBQZyqzPdK8Te2NtyP-qboFaPzrC8";
     private Intent intent;
 
     public DetailFragment() {
