@@ -16,6 +16,7 @@
 package app.com.project.csmith.finalyearproject;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -28,6 +29,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Base64;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -71,6 +73,7 @@ public class MainActivity extends FragmentActivity {
         uiHelper.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setFragments();
+        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "This is a toast to my dearest friend.. you!"));
 
 
     }
