@@ -41,7 +41,6 @@ public class PlaceDetailsFragment extends android.app.Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_place_details, container, false);
         setView(rootView);
-        //new EndpointsAsyncTask().execute(new Pair<Context, String>(getActivity(), "Manfred"));
 
 
         Intent intent = getActivity().getIntent();
@@ -50,42 +49,40 @@ public class PlaceDetailsFragment extends android.app.Fragment {
             place = (Places) intent.getParcelableExtra("Place");
             FetchDetails fetchDetails = new FetchDetails();
             fetchDetails.execute(place);
-
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            setTextViews(rootView);
+            ((TextView) rootView.findViewById(R.id.placeName)).setText(place.getName());
+            ((TextView) rootView.findViewById(R.id.placeWebsite)).setText(place.getWebsite());
 
-            setReviews(rootView);
+            ((TextView) rootView.findViewById(R.id.placeNumber)).setText(place.getPhoneNumber());
+            TextView textView = (TextView) rootView.findViewById(R.id.placeRating);
+            textView.setText(String.valueOf(place.getReviewRating()));
+            if(place.getReviewRating() < 3) textView.setTextColor(Color.RED);
+            else if (place.getReviewRating() >= 4) textView.setTextColor(Color.GREEN);
+            else textView.setTextColor(Color.rgb(255, 165, 0));
+            new GetImageViaUrl((ImageView) rootView.findViewById(R.id.placeIcon)).execute(place.getImage());
+
+             listView = (ListView) rootView.findViewById(R.id.placeReviews);
+
+            ArrayList<String> strings = new ArrayList<>();
+            for(int i = 0; i < place.getReviews().length;i++){
+                strings.add(place.getReviews()[i].getAuthor() + "\n" + place.getReviews()[i].getRating() + "\n" + place.getReviews()[i].getText());
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,strings);
+            listView.setAdapter(adapter);
+
+
+
+
+
+
+
         }
         return rootView;
-    }
-
-    private void setReviews(View rootView) {
-        listView = (ListView) rootView.findViewById(R.id.placeReviews);
-
-        ArrayList<String> strings = new ArrayList<>();
-        for(int i = 0; i < place.getReviews().length;i++){
-            strings.add(place.getReviews()[i].getAuthor() + "\n" + place.getReviews()[i].getRating() + "\n" + place.getReviews()[i].getText());
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,strings);
-        listView.setAdapter(adapter);
-    }
-
-    private void setTextViews(View rootView) {
-        ((TextView) rootView.findViewById(R.id.placeName)).setText(place.getName());
-        ((TextView) rootView.findViewById(R.id.placeWebsite)).setText(place.getWebsite());
-
-        ((TextView) rootView.findViewById(R.id.placeNumber)).setText(place.getPhoneNumber());
-        TextView textView = (TextView) rootView.findViewById(R.id.placeRating);
-        textView.setText(String.valueOf(place.getReviewRating()));
-        if(place.getReviewRating() < 3) textView.setTextColor(Color.RED);
-        else if (place.getReviewRating() >= 4) textView.setTextColor(Color.GREEN);
-        else textView.setTextColor(Color.rgb(255, 165, 0));
-        new GetImageViaUrl((ImageView) rootView.findViewById(R.id.placeIcon)).execute(place.getImage());
     }
 
     @Override

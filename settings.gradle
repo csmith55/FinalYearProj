@@ -1,1 +1,1 @@
-include ':app', ':finalYearProjBackend'
+include ':app'

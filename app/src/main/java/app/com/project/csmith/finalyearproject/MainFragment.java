@@ -138,7 +138,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
     private void fbPermissionsLogin(View view) {
         LoginButton authButton = (LoginButton) view.findViewById(R.id.authButton);
         authButton.setFragment(this);
-        authButton.setReadPermissions(Arrays.asList("user_friends","user_checkins"));
+        authButton.setReadPermissions(Arrays.asList("user_friends"));
     }
 
     private Location getLocation() {
@@ -147,7 +147,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-//                updateFriends();
+                updateFriends();
             }
 
             @Override
