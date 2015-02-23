@@ -20,6 +20,7 @@
             android:value="@string/app_id" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
@@ -29,6 +30,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name" >
             <meta-data
@@ -36,6 +38,7 @@
                 android:value="app.com.project.csmith.finalyearproject.MainActivity" />
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
             android:parentActivityName=".MainActivity" >
@@ -44,6 +47,7 @@
                 android:value="app.com.project.csmith.finalyearproject.MainActivity" />
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".PlacesActivity"
             android:label="@string/title_activity_detail"
             android:parentActivityName=".DetailActivity" >
@@ -52,6 +56,7 @@
                 android:value="app.com.project.csmith.finalyearproject.DetailActivity" />
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".PlaceDetailActivity"
             android:label="@string/title_activity_detail"
             android:parentActivityName=".PlacesActivity" >
@@ -60,6 +65,7 @@
                 android:value="app.com.project.csmith.finalyearproject.DetailActivity" />
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity" >

@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"c05bU6zpvXPOpQakG5gG3IOJh8Y/yx5NCTqtfPPswNWcvGo0GfPbfNU\"",
+ "etag": "\"c05bU6zpvXPOpQakG5gG3IOJh8Y/zJxAdVI1WVBwmOS1TUd7y7gEziA\"",
  "discoveryVersion": "v1",
  "id": "myApi:v1",
  "name": "myApi",
@@ -76,26 +76,58 @@
    "type": "object",
    "properties": {
     "data": {
-     "type": "string"
+     "type": "array",
+     "items": {
+      "type": "number",
+      "format": "double"
+     }
     }
    }
   }
  },
  "methods": {
-  "myApi.sayHi": {
-   "id": "myApi.sayHi",
+  "myApi.getLocation": {
+   "id": "myApi.getLocation",
+   "allowGet": true,
    "parameters": {
-    "name": {
+    "facebookId": {
      "type": "string",
      "required": true
     }
    },
    "parameterOrder": [
-    "name"
+    "facebookId"
    ],
    "returns": {
     "$ref": "MyBean"
    },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "myApi.updateLocation": {
+   "id": "myApi.updateLocation",
+   "parameters": {
+    "Lat": {
+     "type": "number",
+     "required": true,
+     "format": "double"
+    },
+    "Lng": {
+     "type": "number",
+     "required": true,
+     "format": "double"
+    },
+    "fbId": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "fbId",
+    "Lng",
+    "Lat"
+   ],
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]

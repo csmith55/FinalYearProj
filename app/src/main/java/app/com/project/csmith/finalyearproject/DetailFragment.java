@@ -35,9 +35,9 @@ public class DetailFragment extends Fragment {
     private static final String LOG_TAG = app.com.project.csmith.finalyearproject.DetailFragment.class.getSimpleName();
 
     private static final String hashTagShare = " #Friends";
-    private final double latitude = 54.564169;
-    private final double longitude = -6.0012803;
+
     private String locationString;
+    private LatLng latLng;
     private String text[] = new String[1];
     private int PROXIMITY_RADIUS = 500;
     private String GOOGLE_API_KEY = "AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
@@ -57,7 +57,9 @@ public class DetailFragment extends Fragment {
         if (checkIntentExtras()) {
             locationString = intent.getStringExtra("FBNAMES");
             text = locationString.split("Location:");
-            setLocationAndCheckinInfo(rootView);
+            latLng = intent.getParcelableExtra("latLng");
+
+             setLocationAndCheckinInfo(rootView);
 
             setProfilePic(rootView);
 
@@ -76,10 +78,10 @@ public class DetailFragment extends Fragment {
         GoogleMap map = getMapFragment().getMap();
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(latitude, longitude)).zoom(14).bearing(90).tilt(30).build();                   // Creates a CameraPosition from the builder
+                .target(latLng).zoom(14).bearing(90).tilt(30).build();                   // Creates a CameraPosition from the builder
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(text[0]).snippet(text[1]));
+        Marker marker = map.addMarker(new MarkerOptions().position(latLng).title(text[0]).snippet(text[1]));
         marker.showInfoWindow();
     }
 
@@ -102,13 +104,13 @@ public class DetailFragment extends Fragment {
     private void setLocationAndCheckinInfo(View rootView) {
         ((TextView) rootView.findViewById(R.id.detail_text))
                 .setText(text[0]);
-
+/*
         ((TextView) rootView.findViewById(R.id.checkins))
                 .setText("12:00 - Checked in @ Queen's University\n" +
                         "10/12/2014 - Checked in @ Newcastle, Co.Down\n" +
                         "09/12/2014 - Checked in @ Movie House, Dublin Road\n" +
                         "08/12/2014 - Checked in @ Victoria Square Shopping Centre\n" +
-                        "07/12/2014 - Checked in @ Belfast City Hall\n");
+                        "07/12/2014 - Checked in @ Belfast City Hall\n");*/
     }
 
     private boolean checkIntentExtras() {
@@ -117,12 +119,8 @@ public class DetailFragment extends Fragment {
 
     private void applyIntents() {
         Intent placesIntent = new Intent(getActivity(), PlacesActivity.class)
-                .putExtra("LNG", longitude);
-        placesIntent.putExtra("LAT", latitude);
-        placesIntent.putExtra("UserLng", intent.getDoubleExtra("UserLng", 0));
-        placesIntent.putExtra("UserLat", intent.getDoubleExtra("UserLat", 0));
-
-        startActivity(placesIntent);
+                .putExtra("latLng", latLng);
+         startActivity(placesIntent);
     }
 
     private MapFragment getMapFragment() {

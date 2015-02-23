@@ -3,6 +3,8 @@ package app.com.project.csmith.finalyearproject;
 import android.net.Uri;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,14 +20,19 @@ public  class UrlUtility {
 
 
 
-    public static String makeConnection(String placeId){
+    public static String makeConnection(String placeId, LatLng latLng){
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
         try {
-
-            Uri builtUri = buildUri(placeId);
+            Uri builtUri;
+            if(placeId != null ) {
+               builtUri = buildUri(placeId);
+            }
+            else {
+                builtUri = buildUri(latLng);
+            }
 
             urlConnection = getHttpURLConnection(builtUri);
 
@@ -70,20 +77,10 @@ public  class UrlUtility {
 
     }
 
-    private static Uri buildUri(String placeId) {
-
-        if(placeId != null && !placeId.isEmpty()){
-            return buildDetailsUri(placeId);
-        }
-        else {
-            return buildPlacesUri();
-        }
 
 
-    }
+    private static Uri buildUri(LatLng latLng) {
 
-    private static Uri buildPlacesUri() {
-        String longLat = "54.564169, -6.0012803";
         final String PLACES_URL =
                 "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
         final String KEY = "AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
@@ -95,13 +92,13 @@ public  class UrlUtility {
         final String RADIUS_PARAM = "radius";
 
         return Uri.parse(PLACES_URL).buildUpon()
-                .appendQueryParameter(LOCATION_PARAM, longLat)
+                .appendQueryParameter(LOCATION_PARAM, String.valueOf(latLng.latitude)+","+String.valueOf(latLng.longitude))
                 .appendQueryParameter(RADIUS_PARAM, RADIUS)
                 .appendQueryParameter(KEY_PARAM, KEY)
                 .build();
     }
 
-    private static Uri buildDetailsUri(String placeId) {
+    private static Uri buildUri(String placeId) {
         final String detailsUrl = "https://maps.googleapis.com/maps/api/place/details/json?";
         final String key = "AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
 
@@ -117,5 +114,13 @@ public  class UrlUtility {
         urlConnection.setRequestMethod("GET");
         urlConnection.connect();
         return urlConnection;
+    }
+
+    public static String makeConnection(String placeId) {
+        return makeConnection(placeId,null);
+    }
+
+    public static String makeConnection(LatLng latLng) {
+        return makeConnection(null,latLng);
     }
 }

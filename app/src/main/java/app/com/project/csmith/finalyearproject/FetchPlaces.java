@@ -19,6 +19,7 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
     private final String LOG_TAG = FetchPlaces.class.getSimpleName();
     private final String[] foodDrink, entertainment, shopping, healthBeauty, services;
+    private LatLng latLng;
     private GoogleMap googleMap;
     private ArrayList<Marker> entertainmentMarkers, foodDrinkMarkers, shoppingMarkers, healthBeautyMarkers, servicesMarkers;
     private ArrayList<Marker> otherMarkers = new ArrayList<>();
@@ -26,7 +27,6 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
     private Places currentPlace;
 
     public FetchPlaces() {
-
 
         entertainmentMarkers = new ArrayList<>();
         foodDrinkMarkers = new ArrayList<>();
@@ -87,10 +87,7 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
         googleMap = params[0];
 
-
-
-
-        String placesJsonString = UrlUtility.makeConnection(null);
+        String placesJsonString = UrlUtility.makeConnection(latLng);
         try {
             return getPlacesFromJson(placesJsonString);
         } catch (JSONException e) {
@@ -261,5 +258,13 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
     public Places getCurrentPlace() {
         return currentPlace;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
+    }
+
+    public LatLng getLatLng() {
+        return latLng;
     }
 }

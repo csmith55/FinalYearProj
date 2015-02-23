@@ -2,14 +2,10 @@ package app.com.project.csmith.finalyearproject;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,26 +45,20 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_places, container, false);
 
-        double usersLng;
-        double usersLat;
-        double friendsLng;
-        double friendsLat;
+        LatLng latLng;
 
         Intent intent = getActivity().getIntent();
-        if (intent != null && intent.hasExtra("LNG") && intent.hasExtra("LAT")) {
-            usersLng = intent.getDoubleExtra("UserLng", 0);
-            usersLat = intent.getDoubleExtra("UserLat", 0);
-            friendsLng = intent.getDoubleExtra("LNG", 0);
-            friendsLat = intent.getDoubleExtra("LAT", 0);
+        if (intent != null && intent.hasExtra("latLng")) {
+            latLng = intent.getParcelableExtra("latLng");
 
-            Location location = getLocation();
+
 
             Geocoder geocoder;
             List<Address> addresses = null;
             geocoder = new Geocoder(getActivity(), Locale.getDefault());
-            if (location != null) {
+            if (latLng != null) {
                 try {
-                    addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                    addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
 
                     String address = addresses.get(0).getAddressLine(0);
                     String city = addresses.get(0).getAddressLine(1);
@@ -94,11 +84,13 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
             });
 
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(friendsLat, friendsLng)).zoom(14).build(); // Creates a CameraPosition from the builder
+                    .target(latLng).zoom(14).build(); // Creates a CameraPosition from the builder
             map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-            Marker marker = map.addMarker(new MarkerOptions().position(new LatLng(friendsLat, friendsLng)));
+            Marker marker = map.addMarker(new MarkerOptions().position(latLng));
             marker.showInfoWindow();
+
+            fetchPlaces.setLatLng(latLng);
 
             fetchPlaces.execute(map);
         }
@@ -218,39 +210,7 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
         return (MapFragment) fm.findFragmentById(R.id.placesMap);
     }
 
-    public Location getLocation() {
-        String locationProvider = LocationManager.NETWORK_PROVIDER;
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                getLocation();
 
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
-
-        final Location lastKnown = locationManager.getLastKnownLocation(locationProvider);
-
-        locationManager.removeUpdates(locationListener);
-        return lastKnown;
-    }
 
 
 }

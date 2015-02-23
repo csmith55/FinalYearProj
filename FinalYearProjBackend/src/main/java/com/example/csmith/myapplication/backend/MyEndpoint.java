@@ -6,9 +6,16 @@
 
 package com.example.csmith.myapplication.backend;
 
+
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 import javax.inject.Named;
 
@@ -17,16 +24,37 @@ import javax.inject.Named;
  */
 @Api(name = "myApi", version = "v1", namespace = @ApiNamespace(ownerDomain = "backend.myapplication.csmith.example.com", ownerName = "backend.myapplication.csmith.example.com", packagePath = ""))
 public class MyEndpoint {
+    DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
 
-    /**
-     * A simple endpoint method that takes a name and says Hi back
-     */
-    @ApiMethod(name = "sayHi")
-    public MyBean sayHi(@Named("name") String name) {
-        MyBean response = new MyBean();
-        response.setData("Hi, " + name);
 
-        return response;
+
+    @ApiMethod(name = "updateLocation")
+    public void updateLocation(@Named("fbId") String facebookId, @Named("Lng") Double lat, @Named("Lat") Double lng){
+
+        Entity newLocation = new Entity("Location", facebookId);
+        newLocation.setProperty("lat", lat);
+        newLocation.setProperty("lng", lng);
+
+        datastoreService.put(newLocation);
+
     }
+
+    @ApiMethod(name = "getLocation")
+    public MyBean getLocation(@Named("facebookId") String facebookId) throws EntityNotFoundException {
+
+        Key key = KeyFactory.createKey("Location", facebookId);
+
+        MyBean response = new MyBean();
+
+        Entity entity = datastoreService.get(key);
+
+        double[] latLng = new double[2];
+        latLng[0] = (double) entity.getProperty("lat");
+        latLng[1] = (double) entity.getProperty("lng");
+        response.setData(latLng);
+        return response;
+
+    }
+
 
 }

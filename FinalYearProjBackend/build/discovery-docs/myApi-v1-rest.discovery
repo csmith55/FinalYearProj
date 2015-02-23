@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"c05bU6zpvXPOpQakG5gG3IOJh8Y/yx5NCTqtfPPswNWcvGo0GfPbfNU\"",
+ "etag": "\"c05bU6zpvXPOpQakG5gG3IOJh8Y/zJxAdVI1WVBwmOS1TUd7y7gEziA\"",
  "discoveryVersion": "v1",
  "id": "myApi:v1",
  "name": "myApi",
@@ -13,10 +13,10 @@
   "x32": "http://www.google.com/images/icons/product/search-32.gif"
  },
  "protocol": "rest",
- "baseUrl": "https://myApplicationId.appspot.com/_ah/api/myApi/v1/sayHi/",
- "basePath": "/_ah/api/myApi/v1/sayHi/",
+ "baseUrl": "https://myApplicationId.appspot.com/_ah/api/myApi/v1/",
+ "basePath": "/_ah/api/myApi/v1/",
  "rootUrl": "https://myApplicationId.appspot.com/_ah/api/",
- "servicePath": "myApi/v1/sayHi/",
+ "servicePath": "myApi/v1/",
  "batchPath": "batch",
  "parameters": {
   "alt": {
@@ -78,29 +78,65 @@
    "type": "object",
    "properties": {
     "data": {
-     "type": "string"
+     "type": "array",
+     "items": {
+      "type": "number",
+      "format": "double"
+     }
     }
    }
   }
  },
  "methods": {
-  "sayHi": {
-   "id": "myApi.sayHi",
-   "path": "{name}",
-   "httpMethod": "POST",
+  "getLocation": {
+   "id": "myApi.getLocation",
+   "path": "mybean/{facebookId}",
+   "httpMethod": "GET",
    "parameters": {
-    "name": {
+    "facebookId": {
      "type": "string",
      "required": true,
      "location": "path"
     }
    },
    "parameterOrder": [
-    "name"
+    "facebookId"
    ],
    "response": {
     "$ref": "MyBean"
    },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "updateLocation": {
+   "id": "myApi.updateLocation",
+   "path": "void/{fbId}/{Lng}/{Lat}",
+   "httpMethod": "PUT",
+   "parameters": {
+    "Lat": {
+     "type": "number",
+     "required": true,
+     "format": "double",
+     "location": "path"
+    },
+    "Lng": {
+     "type": "number",
+     "required": true,
+     "format": "double",
+     "location": "path"
+    },
+    "fbId": {
+     "type": "string",
+     "required": true,
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "fbId",
+    "Lng",
+    "Lat"
+   ],
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]

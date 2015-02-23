@@ -1,17 +1,18 @@
 package com.example.csmith.myapplication.backend;
 
+
 /**
  * The object model for the data we are sending through endpoints
  */
 public class MyBean {
 
-    private String myData;
+    private double[] myData;
 
-    public String getData() {
+    public double[] getData() {
         return myData;
     }
 
-    public void setData(String data) {
+    public void setData(double[] data) {
         myData = data;
     }
 }

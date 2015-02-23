@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,7 +30,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-import com.facebook.widget.ProfilePictureView;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +52,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
     private final ArrayList<String> profilePics = new ArrayList<>();
     private ArrayAdapter<String> profileName;
     private UiLifecycleHelper uiHelper;
+    private String usersFacebookId;
+    private LatLng latLng = new LatLng(0,0);
+    private Intent intent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,26 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void updateFriends() {
+        if (Session.getActiveSession().isOpened())
+        {
+            // Request user data and show the results
+            Request.newMeRequest(Session.getActiveSession(), new Request.GraphUserCallback()
+            {
+                @Override
+                public void onCompleted(GraphUser user, Response response)
+                {
+                    if (null != user)
+                    {
+
+                        Log.v(TAG, "Response : " + response);
+                        Log.v(TAG, "UserID : " + user.getId());
+                        Log.v(TAG, "User FirstName : " + user.getFirstName());
+                        usersFacebookId = user.getId();
+
+                    }
+                }
+            }).executeAsync();
+        }
         makeMeRequest(Session.getActiveSession());
     }
 
@@ -90,13 +114,14 @@ public class MainFragment extends android.support.v4.app.Fragment {
         super.onStart();
         updateFriends();
 
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        profileName = new ArrayAdapter<>(getActivity(), R.layout.list_item, R.id.list_item_friend_textview, new ArrayList<String>());
+        setProfileName(new ArrayAdapter<>(getActivity(), R.layout.list_item, R.id.list_item_friend_textview, new ArrayList<String>()));
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         final Location lastKnown = getLocation();
 
@@ -107,32 +132,30 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
         setAdapterAndIntents(view, lastKnown);
 
-
         return view;
 
     }
 
     private void setAdapterAndIntents(View view, final Location lastKnown) {
         ListView listView = (ListView) view.findViewById(R.id.listview_friend);
-        listView.setAdapter(profileName);
+        listView.setAdapter(getProfileName());
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                createDetailActivityIntent(position, lastKnown);
+                createDetailActivityIntent(position);
             }
         });
     }
 
-    private void createDetailActivityIntent(int position, Location lastKnown) {
-        String name = profileName.getItem(position);
-        Intent intent = new Intent(getActivity(), DetailActivity.class)
-                .putExtra(FBNAMES, name);
-        intent.putExtra(FBPICS, profilePics.get(position));
-        intent.putExtra("UserLng", lastKnown.getLongitude());
-        intent.putExtra("UserLat", lastKnown.getLatitude());
-        startActivity(intent);
+    private void createDetailActivityIntent(int position) {
+        String name = getProfileName().getItem(position);
+         setIntent(new Intent(getActivity(), DetailActivity.class)
+                .putExtra(FBNAMES, name));
+        getIntent().putExtra(FBPICS, getProfilePics().get(position));
+        getIntent().putExtra("latLng", getLatLng());
+        startActivity(getIntent());
     }
 
     private void fbPermissionsLogin(View view) {
@@ -142,12 +165,14 @@ public class MainFragment extends android.support.v4.app.Fragment {
     }
 
     private Location getLocation() {
-        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        String locationProvider = LocationManager.GPS_PROVIDER;
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                updateFriends();
+                if(usersFacebookId != null)
+               new EndpointsAsyncTask(usersFacebookId).execute(new Pair<Context, LatLng>(getActivity(), new LatLng(location.getLatitude(),location.getLongitude())));
+
             }
 
             @Override
@@ -178,13 +203,15 @@ public class MainFragment extends android.support.v4.app.Fragment {
         return lastKnown;
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
         Session session = Session.getActiveSession();
         if (session != null &&
                 (session.isOpened() || session.isClosed())) {
-            onSessionStateChange(session.getState());
+                        onSessionStateChange(session.getState());
         }
 
         uiHelper.onResume();
@@ -195,7 +222,10 @@ public class MainFragment extends android.support.v4.app.Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         uiHelper.onActivityResult(requestCode, resultCode, data);
-    }
+
+
+        }
+
 
     @Override
     public void onPause() {
@@ -218,7 +248,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
     private void onSessionStateChange(SessionState state) {
         if (state.isOpened()) {
             Log.i(TAG, "Logged in!");
-            updateFriends();
+
 
         } else if (state.isClosed()) {
             Log.i(TAG, "Logged out!");
@@ -246,8 +276,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
                                 //  profilePictureView.setProfileId(graphUsers.get(0).getId());
                                 // Set the Textview's text to the user's name.
                                 // userNameView.setText(user.getName());
-                                profileName.clear();
-                                profilePics.clear();
+                                getProfileName().clear();
+                                getProfilePics().clear();
 
 
                                 if (type.contains("Nearest Friend")) {
@@ -276,41 +306,13 @@ public class MainFragment extends android.support.v4.app.Fragment {
             int distanceOfFriend = Integer.parseInt(distance);
             int maxDistance = Integer.parseInt(value);
             if (distanceOfFriend <= maxDistance) {
-                addFriendToResults(graphUsers, i);
+                new GetLocationAsyncTask(graphUsers.get(i), i, this).execute(new Pair<Context, String>(getActivity(), graphUsers.get(i).getId()));
             }
 
         }
     }
 
-    private void addFriendToResults(List<GraphUser> graphUsers, int i) {
-        ProfilePictureView profilePictureView = null;
-        profileName.add(graphUsers.get(i).getName() + "\nLocation: " + fakeLocations[i]);
-        profilePics.add(graphUsers.get(i).getId());
 
-        switch (i) {
-            case 0:
-                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic0);
-                break;
-            case 1:
-                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic1);
-                break;
-            case 2:
-                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic2);
-                break;
-            case 3:
-                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic3);
-                break;
-            case 4:
-                profilePictureView = (ProfilePictureView) getView().findViewById(R.id.profile_pic4);
-                break;
-        }
-
-
-        assert profilePictureView != null;
-        profilePictureView.setProfileId(graphUsers.get(i).getId());
-        profilePictureView.setCropped(true);
-
-    }
 
     private void nearestFriendsQuery(List<GraphUser> graphUsers, String value) {
 
@@ -318,10 +320,38 @@ public class MainFragment extends android.support.v4.app.Fragment {
         if (numOfFriends > graphUsers.size())
             numOfFriends = graphUsers.size();
         for (int i = 0; i < numOfFriends; i++) {
-            addFriendToResults(graphUsers, i);
+            new GetLocationAsyncTask(graphUsers.get(i), i, this).execute(new Pair<Context, String>(getActivity(), graphUsers.get(i).getId()));
+
         }
     }
 
+    public ArrayList<String> getProfilePics() {
+        return profilePics;
+    }
+
+    public ArrayAdapter<String> getProfileName() {
+        return profileName;
+    }
+
+    public void setProfileName(ArrayAdapter<String> profileName) {
+        this.profileName = profileName;
+    }
+
+    public LatLng getLatLng() {
+        return latLng;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
+    }
+
+    public Intent getIntent() {
+        return intent;
+    }
+
+    public void setIntent(Intent intent) {
+        this.intent = intent;
+    }
 }
 
 

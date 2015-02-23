@@ -50,7 +50,7 @@
         android:layout_below="@+id/profile_pic"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/checkins" />
+        android:layout_above="@+id/getInTouch" />
 
     <Button
         android:layout_width="wrap_content"
