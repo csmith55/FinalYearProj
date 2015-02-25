@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -38,6 +39,7 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
     Button blueButton, cyanButton, greenButton, orangeButton, magentaButton, violetButton, findOutMore;
 
     boolean blueClicked, cyanClicked, greenClicked, orangeClicked, magentaClicked, violetClicked;
+    Drawable drawable;
 
 
     @Override
@@ -106,6 +108,8 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
         magentaButton = (Button) rootView.findViewById(R.id.magentaMarker);
         violetButton = (Button) rootView.findViewById(R.id.violetMarker);
         findOutMore = (Button) rootView.findViewById(R.id.findOutMore);
+        findOutMore.setVisibility(View.INVISIBLE);
+
 
 
 
@@ -121,6 +125,7 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         filterColours(view);
+        findOutMore.setVisibility(View.VISIBLE);
 
     }
 
@@ -158,7 +163,7 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
 
     private void filterVioletMarkers() {
         violetClicked = !violetClicked;
-        violetButton.setBackgroundColor(violetClicked ? Color.rgb(238, 130, 238) : Color.BLACK);
+        violetButton.setBackgroundColor(violetClicked ? Color.rgb(238, 130, 238) : android.R.drawable.btn_default_small);
         fetchPlaces.loopFoodDrink();
     }
 

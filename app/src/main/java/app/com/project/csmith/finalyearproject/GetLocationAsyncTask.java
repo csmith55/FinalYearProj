@@ -21,7 +21,7 @@ import java.util.Locale;
 /**
  * Created by csmith on 22/02/15.
  */
-public class GetLocationAsyncTask extends AsyncTask<Pair<Context, String>, Void,LatLng> {
+ public class GetLocationAsyncTask extends AsyncTask<Pair<Context, String>, Void,LatLng> {
     private static MyApi myApiService = null;
     private GraphUser graphUser;
     private MainFragment mainFragment;
@@ -68,7 +68,6 @@ public class GetLocationAsyncTask extends AsyncTask<Pair<Context, String>, Void,
     @Override
     protected void onPostExecute(LatLng latLng){
         if(latLng != null) {
-            mainFragment.setLatLng(latLng);
             addFriendToResults(latLng);
         }
     }
@@ -88,6 +87,7 @@ public class GetLocationAsyncTask extends AsyncTask<Pair<Context, String>, Void,
             }
 
         mainFragment.getProfileName().add(graphUser.getName() + "\nLocation: " + addresses.get(0).getAddressLine(0));
+        mainFragment.getProfileLatLng().add(longLat);
         mainFragment.getProfilePics().add(graphUser.getId());
 
         switch (index) {

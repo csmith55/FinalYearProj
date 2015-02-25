@@ -50,10 +50,11 @@ public class MainFragment extends android.support.v4.app.Fragment {
         }
     };
     private final ArrayList<String> profilePics = new ArrayList<>();
+    private ArrayList<LatLng> profileLatLng = new ArrayList<>();
     private ArrayAdapter<String> profileName;
     private UiLifecycleHelper uiHelper;
     private String usersFacebookId;
-    private LatLng latLng = new LatLng(0,0);
+
     private Intent intent;
 
     @Override
@@ -154,7 +155,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
          setIntent(new Intent(getActivity(), DetailActivity.class)
                 .putExtra(FBNAMES, name));
         getIntent().putExtra(FBPICS, getProfilePics().get(position));
-        getIntent().putExtra("latLng", getLatLng());
+        getIntent().putExtra("latLng", getProfileLatLng().get(position));
         startActivity(getIntent());
     }
 
@@ -337,20 +338,20 @@ public class MainFragment extends android.support.v4.app.Fragment {
         this.profileName = profileName;
     }
 
-    public LatLng getLatLng() {
-        return latLng;
-    }
-
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
-    }
-
     public Intent getIntent() {
         return intent;
     }
 
     public void setIntent(Intent intent) {
         this.intent = intent;
+    }
+
+    public ArrayList<LatLng> getProfileLatLng() {
+        return profileLatLng;
+    }
+
+    public void setProfileLatLng(ArrayList<LatLng> profileLatLng) {
+        this.profileLatLng = profileLatLng;
     }
 }
 

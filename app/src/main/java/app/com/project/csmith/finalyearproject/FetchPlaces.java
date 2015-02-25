@@ -135,7 +135,7 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if(pArray != null) {
+                if(pArray != null && marker.getTitle() != null) {
                     for (Places place : pArray) {
                         if (marker.getTitle().equals(place.getName())) {
                             setCurrentPlace(place);
