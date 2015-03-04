@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by csmith on 10/02/15.
@@ -20,7 +21,7 @@ public  class UrlUtility {
 
 
 
-    public static String makeConnection(String placeId, LatLng latLng){
+    public static String makeConnection(String placeId, ArrayList<LatLng> latLng, boolean distanceApi){
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -30,8 +31,11 @@ public  class UrlUtility {
             if(placeId != null ) {
                builtUri = buildUri(placeId);
             }
-            else {
+            else if (distanceApi){
                 builtUri = buildUri(latLng);
+            }
+            else {
+                builtUri = buildUri(latLng.get(0));
             }
 
             urlConnection = getHttpURLConnection(builtUri);
@@ -77,6 +81,25 @@ public  class UrlUtility {
 
     }
 
+    private static Uri buildUri(ArrayList<LatLng> latLng) {
+        final String PLACES_URL =
+                "https://maps.googleapis.com/maps/api/distancematrix/json?";
+        final String KEY = "AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
+        final String ORIGIN = String.valueOf(latLng.get(0).latitude)+","+String.valueOf(latLng.get(0).longitude);
+        final String DESTINATION =  String.valueOf(latLng.get(1).latitude)+","+String.valueOf(latLng.get(1).longitude);
+
+
+        final String KEY_PARAM = "key";
+        final String ORIGIN_PARAM = "origins";
+        final String DESTINATION_PARAM = "destinations";
+
+        return Uri.parse(PLACES_URL).buildUpon()
+                .appendQueryParameter(ORIGIN_PARAM, ORIGIN)
+                .appendQueryParameter(DESTINATION_PARAM, DESTINATION)
+                .appendQueryParameter(KEY_PARAM, KEY)
+                .build();
+
+    }
 
 
     private static Uri buildUri(LatLng latLng) {
@@ -117,10 +140,16 @@ public  class UrlUtility {
     }
 
     public static String makeConnection(String placeId) {
-        return makeConnection(placeId,null);
+        return makeConnection(placeId,null, false);
     }
 
     public static String makeConnection(LatLng latLng) {
-        return makeConnection(null,latLng);
+        ArrayList<LatLng> latLngs = new ArrayList<>();
+        latLngs.add(latLng);
+        return makeConnection(null,latLngs, false);
+    }
+
+    public static String makeConnection(ArrayList<LatLng> param) {
+        return makeConnection(null,param,true);
     }
 }

@@ -1,46 +1,45 @@
 package app.com.project.csmith.finalyearproject;
 
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.util.Pair;
 
 import com.example.csmith.myapplication.backend.myApi.MyApi;
 import com.facebook.model.GraphUser;
-import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by csmith on 22/02/15.
  */
- public class GetLocationAsyncTask extends AsyncTask<Pair<Context, String>, Void,LatLng> {
+ public class GetLocationAsyncTask extends AsyncTask<Void,Void,Void> {
     private static MyApi myApiService = null;
-    private GraphUser graphUser;
+    private List<GraphUser> graphUsers;
+    private ArrayList<FBFriendDetails> friendDetails;
     private MainFragment mainFragment;
     private int index;
 
 
     private Context context;
+    private LatLng usersLatLng;
 
 
 
-    public GetLocationAsyncTask(GraphUser graphUser, int i, MainFragment mainFragment) {
-        this.graphUser = graphUser;
-        this.index = i;
+    public GetLocationAsyncTask(List<GraphUser> graphUsers, MainFragment mainFragment, LatLng latLng, Context context) {
+        this.graphUsers = graphUsers;
         this.mainFragment = mainFragment;
+        this.usersLatLng = latLng;
+        this.context = context;
+        friendDetails = new ArrayList<>(graphUsers.size());
     }
 
 
     @Override
-    protected LatLng doInBackground(Pair<Context, String>... params) {
+    protected Void doInBackground(Void... params) {
         if (myApiService == null) {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
                     .setRootUrl("https://finalyearproject40057321.appspot.com/_ah/api/");
@@ -49,30 +48,28 @@ import java.util.Locale;
             myApiService = builder.build();
         }
 
-        context = params[0].first;
-        String id = params[0].second;
-        Log.d("id", id);
+        for (int i = 0; i < graphUsers.size(); i++){
+            try {
+                List<Double> list = myApiService.getLocation(graphUsers.get(i).getId()).execute().getData();
+                friendDetails.add(new FBFriendDetails(graphUsers.get(i).getId(),graphUsers.get(i).getName(),new LatLng(list.get(0),list.get(1))));
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        try {
-
-           List<Double> list=  myApiService.getLocation(params[0].second).execute().getData();
-            return new LatLng(list.get(0),list.get(1));
-        } catch (IOException e) {
-            return null;
         }
-
-
+        return null;
     }
 
     @Override
-    protected void onPostExecute(LatLng latLng){
-        if(latLng != null) {
-            addFriendToResults(latLng);
-        }
+    protected void onPostExecute(Void aVoid){
+
+            new CalculateDistance(friendDetails,mainFragment,context).execute();
+            //addFriendToResults(latLng);
+
     }
 
-    private void addFriendToResults(LatLng longLat) {
+   /* private void addFriendToResults(LatLng longLat) {
         ProfilePictureView profilePictureView = null;
         //geocoder here!
         Geocoder geocoder;
@@ -86,9 +83,7 @@ import java.util.Locale;
                 e.printStackTrace();
             }
 
-        mainFragment.getProfileName().add(graphUser.getName() + "\nLocation: " + addresses.get(0).getAddressLine(0));
-        mainFragment.getProfileLatLng().add(longLat);
-        mainFragment.getProfilePics().add(graphUser.getId());
+        mainFragment.getProfileName().add(graphUsers.getName() + "\nLocation: " + addresses.get(0).getAddressLine(0));
 
         switch (index) {
             case 0:
@@ -110,8 +105,8 @@ import java.util.Locale;
 
 
         assert profilePictureView != null;
-        profilePictureView.setProfileId(graphUser.getId());
+        profilePictureView.setProfileId(graphUsers.getID());
         profilePictureView.setCropped(true);
 
-    }
+    }*/
 }
