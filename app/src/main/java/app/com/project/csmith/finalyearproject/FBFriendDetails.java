@@ -11,6 +11,7 @@ public class FBFriendDetails {
     private String id;
     private Double distance;
     private String name;
+    private String distanceText;
 
     public FBFriendDetails(String id, String name, LatLng latLng) {
         this.id = id;
@@ -43,5 +44,17 @@ public class FBFriendDetails {
 
     public void setDistance(Double distance) {
         this.distance = distance;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistanceText(String distanceText) {
+        this.distanceText = distanceText;
+    }
+
+    public String getDistanceText() {
+        return distanceText;
     }
 }

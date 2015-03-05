@@ -104,13 +104,6 @@ public class DetailFragment extends Fragment {
     private void setLocationAndCheckinInfo(View rootView) {
         ((TextView) rootView.findViewById(R.id.detail_text))
                 .setText(text[0]);
-/*
-        ((TextView) rootView.findViewById(R.id.checkins))
-                .setText("12:00 - Checked in @ Queen's University\n" +
-                        "10/12/2014 - Checked in @ Newcastle, Co.Down\n" +
-                        "09/12/2014 - Checked in @ Movie House, Dublin Road\n" +
-                        "08/12/2014 - Checked in @ Victoria Square Shopping Centre\n" +
-                        "07/12/2014 - Checked in @ Belfast City Hall\n");*/
     }
 
     private boolean checkIntentExtras() {
@@ -165,10 +158,6 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-
-
-
-
     }
 
     @Override
@@ -183,13 +172,5 @@ public class DetailFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private Intent createShareIntent() {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT,
-                locationString + hashTagShare);
-        return shareIntent;
-    }
 }
 

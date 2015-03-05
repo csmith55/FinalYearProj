@@ -2,6 +2,8 @@ package app.com.project.csmith.finalyearproject;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -25,8 +27,10 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
     private ArrayList<Marker> otherMarkers = new ArrayList<>();
     private Places[] pArray;
     private Places currentPlace;
+    private Button findOutMore;
 
-    public FetchPlaces() {
+    public FetchPlaces(Button findOutMore) {
+        this.findOutMore = findOutMore;
 
         entertainmentMarkers = new ArrayList<>();
         foodDrinkMarkers = new ArrayList<>();
@@ -139,6 +143,7 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
                     for (Places place : pArray) {
                         if (marker.getTitle().equals(place.getName())) {
                             setCurrentPlace(place);
+                            findOutMore.setVisibility(View.VISIBLE);
                         }
                     }
                 }

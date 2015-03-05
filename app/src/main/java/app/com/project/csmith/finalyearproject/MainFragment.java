@@ -61,6 +61,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
         uiHelper = new UiLifecycleHelper(getActivity(), callback);
         uiHelper.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        updateFriends();
 
 
     }
@@ -113,7 +114,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
                     public void onCompleted(List<GraphUser> graphUsers, Response response) {
                         if (activeSession == Session.getActiveSession()) {
                             if (graphUsers != null) {
-                                new GetLocationAsyncTask(graphUsers,mainFragment,new LatLng(getLocation().getLatitude(),getLocation().getLongitude())).execute();
+                                new GetLocationAsyncTask(graphUsers,friendDetails,mainFragment,new LatLng(getLocation().getLatitude(),getLocation().getLongitude())).execute();
                             }
                         }
 
@@ -127,7 +128,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updateFriends();
+
 
 
     }

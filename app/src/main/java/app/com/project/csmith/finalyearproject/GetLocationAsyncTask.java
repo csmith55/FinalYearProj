@@ -1,6 +1,5 @@
 package app.com.project.csmith.finalyearproject;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.csmith.myapplication.backend.myApi.MyApi;
@@ -21,20 +20,17 @@ import java.util.List;
     private List<GraphUser> graphUsers;
     private ArrayList<FBFriendDetails> friendDetails;
     private MainFragment mainFragment;
-    private int index;
 
-
-    private Context context;
     private LatLng usersLatLng;
 
 
 
-    public GetLocationAsyncTask(List<GraphUser> graphUsers, MainFragment mainFragment, LatLng latLng, Context context) {
+    public GetLocationAsyncTask(List<GraphUser> graphUsers, ArrayList<FBFriendDetails> friendDetails, MainFragment mainFragment, LatLng latLng) {
         this.graphUsers = graphUsers;
         this.mainFragment = mainFragment;
         this.usersLatLng = latLng;
-        this.context = context;
-        friendDetails = new ArrayList<>(graphUsers.size());
+
+        this.friendDetails = friendDetails;
     }
 
 
@@ -63,50 +59,9 @@ import java.util.List;
 
     @Override
     protected void onPostExecute(Void aVoid){
-
-            new CalculateDistance(friendDetails,mainFragment,context).execute();
-            //addFriendToResults(latLng);
+        if(!friendDetails.isEmpty())
+             new CalculateDistance(friendDetails,mainFragment,usersLatLng).execute();
 
     }
 
-   /* private void addFriendToResults(LatLng longLat) {
-        ProfilePictureView profilePictureView = null;
-        //geocoder here!
-        Geocoder geocoder;
-        List<Address> addresses = null;
-        geocoder = new Geocoder(context, Locale.getDefault());
-
-            try {
-                addresses = geocoder.getFromLocation(longLat.latitude, longLat.longitude, 1);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        mainFragment.getProfileName().add(graphUsers.getName() + "\nLocation: " + addresses.get(0).getAddressLine(0));
-
-        switch (index) {
-            case 0:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.profile_pic0);
-                break;
-            case 1:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.profile_pic1);
-                break;
-            case 2:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.profile_pic2);
-                break;
-            case 3:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.profile_pic3);
-                break;
-            case 4:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.profile_pic4);
-                break;
-        }
-
-
-        assert profilePictureView != null;
-        profilePictureView.setProfileId(graphUsers.getID());
-        profilePictureView.setCropped(true);
-
-    }*/
 }

@@ -149,7 +149,10 @@ public  class UrlUtility {
         return makeConnection(null,latLngs, false);
     }
 
-    public static String makeConnection(ArrayList<LatLng> param) {
-        return makeConnection(null,param,true);
+    public static String makeConnection(LatLng  usersLatLng, LatLng detailsLatLng) {
+        ArrayList<LatLng> latLngs = new ArrayList<>();
+        latLngs.add(usersLatLng);
+        latLngs.add(detailsLatLng);
+        return makeConnection(null,latLngs,true);
     }
 }

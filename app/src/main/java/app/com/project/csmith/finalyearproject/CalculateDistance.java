@@ -1,16 +1,20 @@
 package app.com.project.csmith.finalyearproject;
 
-import android.content.Context;
+import android.content.SharedPreferences;
+import android.location.Address;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.facebook.model.GraphUser;
+import com.facebook.widget.ProfilePictureView;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,23 +23,25 @@ import java.util.List;
 public class CalculateDistance extends AsyncTask<Void,Void,Void> {
 
     private final MainFragment mainFragment;
-    private final Context context;
     private final ArrayList<FBFriendDetails> friendDetails;
-    private ArrayList<Double> distances;
+    private LatLng usersLatLng;
 
 
-    public CalculateDistance(ArrayList<FBFriendDetails> friendDetails, MainFragment mainFragment, Context context) {
+
+
+    public CalculateDistance(ArrayList<FBFriendDetails> friendDetails, MainFragment mainFragment, LatLng usersLatLng) {
         this.friendDetails = friendDetails;
         this.mainFragment = mainFragment;
-        this.context = context;
+        this.usersLatLng = usersLatLng;
+
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         for(FBFriendDetails details : friendDetails) {
-            String jsonDetailsString = UrlUtility.makeConnection(details.getLatLng());
+            String jsonDetailsString = UrlUtility.makeConnection(details.getLatLng(),usersLatLng);
             try {
-               details.setDistance(getDetailsFromJson(jsonDetailsString));
+               getDetailsFromJson(jsonDetailsString, details);
             } catch (JSONException e) {
                 Log.e("", e.getMessage(), e);
                 e.printStackTrace();
@@ -45,14 +51,18 @@ public class CalculateDistance extends AsyncTask<Void,Void,Void> {
         return null;
     }
 
-    private Double getDetailsFromJson(String jsonDetailsString) throws JSONException{
+    private Void getDetailsFromJson(String jsonDetailsString, FBFriendDetails details) throws JSONException{
         JSONObject jsonObject = new JSONObject(jsonDetailsString);
-        JSONArray rows = jsonObject.getJSONArray("rows");
+        if (jsonObject.has("rows")) {
+            JSONArray rows = jsonObject.getJSONArray("rows");
 
-        //rows.getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("distance").getDouble("value")
-        JSONArray element = rows.getJSONObject(0).getJSONArray("elements");
-        Log.d("SFHAUISFHIUAF", element.toString());
-            return element.getJSONObject(0).getJSONObject("distance").getDouble("value");
+            //rows.getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("distance").getDouble("value")
+            JSONArray element = rows.getJSONObject(0).getJSONArray("elements");
+            Log.d("SFHAUISFHIUAF", element.toString());
+            details.setDistanceText(element.getJSONObject(0).getJSONObject("distance").getString("text"));
+            details.setDistance(element.getJSONObject(0).getJSONObject("distance").getDouble("value"));
+        }
+        return null;
 
     }
 
@@ -61,51 +71,57 @@ public class CalculateDistance extends AsyncTask<Void,Void,Void> {
 
        //check what type of query then filter out the results
 
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(mainFragment.getActivity());
+        final String value = preference.getString("value", "10000");
+        final String type = preference.getString("units", "default value");
+
+        if(type.contains("Nearest Friends")){
+            nearestFriendsQuery(value);
+        }
+        else
+           rangeFriendsQuery(value);
+
+
     }
 
-    private static void rangeFriendsQuery(List<GraphUser> graphUsers, String value) {
+    private void rangeFriendsQuery(String value) {
+        Collections.sort(friendDetails, new CustomCompator());
+        int maxDistance = Integer.parseInt(value);
 
-        for (int i = 0; i < graphUsers.size(); i++) {
+        for (int i = 0; i < friendDetails.size(); i++) {
 
 
-            int distanceOfFriend = 500;
-            int maxDistance = Integer.parseInt(value);
-            if (distanceOfFriend <= maxDistance) {
-               // friendDetails.add(new FBFriendDetails(graphUsers.get(i).getId(),graphUsers.get(i).getName(), new LatLng(list.get(0), list.get(1))));
+            if (friendDetails.get(i).getDistance() <= maxDistance) {
+
+                addFriendToResults(friendDetails.get(i), i);
 
             }
 
         }
     }
 
-/*
 
-    private static void nearestFriendsQuery(List<GraphUser> graphUsers, String value) {
+    private void nearestFriendsQuery(String value) {
+        Collections.sort(friendDetails, new CustomCompator());
 
         int numOfFriends = Integer.parseInt(value);
-        if (numOfFriends > graphUsers.size())
-            numOfFriends = graphUsers.size();
-        for (int i = 0; i < numOfFriends; i++) {
-            new GetLocationAsyncTask(graphUsers.get(i), i, this, new LatLng(getLocation().getLatitude(),getLocation().getLongitude())).execute(new Pair<Context, String>(getActivity(), graphUsers.get(i).getId()));
+        if (numOfFriends > friendDetails.size())
+            numOfFriends = friendDetails.size();
 
+        for (int i = 0; i < numOfFriends; i++){
+            addFriendToResults(friendDetails.get(i),i);
         }
+
+
+
+
     }
 
-    private void addFriendToResults(LatLng longLat) {
+    private void addFriendToResults(FBFriendDetails details, int index) {
         ProfilePictureView profilePictureView = null;
-        //geocoder here!
-        Geocoder geocoder;
-        List<Address> addresses = null;
-        geocoder = new Geocoder(context, Locale.getDefault());
 
-        try {
-            addresses = geocoder.getFromLocation(longLat.latitude, longLat.longitude, 1);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        mainFragment.getProfileName().add(graphUser.getName() + "\nLocation: " + addresses.get(0).getAddressLine(0));
+        List<Address> addresses = GeocoderUtil.convertLatLngToAddress(details.getLatLng(),mainFragment.getActivity());
+        mainFragment.getProfileName().add(details.getName() + "\nLocation: " + addresses.get(0).getAddressLine(0) + "\nDistance: " + details.getDistanceText());
 
 
         switch (index) {
@@ -128,10 +144,10 @@ public class CalculateDistance extends AsyncTask<Void,Void,Void> {
 
 
         assert profilePictureView != null;
-        profilePictureView.setProfileId(graphUser.getID());
+        profilePictureView.setProfileId(details.getID());
         profilePictureView.setCropped(true);
 
-    }*/
+    }
 
 
 }
