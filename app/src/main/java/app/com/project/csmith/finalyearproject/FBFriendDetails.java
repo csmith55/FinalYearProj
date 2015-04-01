@@ -19,7 +19,10 @@ public class FBFriendDetails {
         this.latLng = latLng;
     }
 
-
+    public FBFriendDetails(String id, LatLng latLng) {
+        this.id = id;
+        this.latLng = latLng;
+    }
 
 
     public LatLng getLatLng() {

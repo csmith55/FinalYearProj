@@ -16,6 +16,8 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 
 import javax.inject.Named;
 
@@ -40,7 +42,7 @@ public class MyEndpoint {
     }
 
     @ApiMethod(name = "getLocation")
-    public MyBean getLocation(@Named("facebookId") String facebookId) throws EntityNotFoundException {
+      public MyBean getLocation(@Named("facebookId") String facebookId) throws EntityNotFoundException {
 
         Key key = KeyFactory.createKey("Location", facebookId);
 
@@ -52,6 +54,24 @@ public class MyEndpoint {
         latLng[0] = (double) entity.getProperty("lat");
         latLng[1] = (double) entity.getProperty("lng");
         response.setData(latLng);
+        return response;
+
+    }
+
+    @ApiMethod(name = "getAllLocations")
+    public MyRTreeBean getAllLocations() throws EntityNotFoundException {
+
+
+
+        MyRTreeBean response = new MyRTreeBean();
+
+        Query query = new Query("Location");
+        PreparedQuery preparedQuery = datastoreService.prepare(query);
+
+        for(Entity entity : preparedQuery.asIterable()){
+            response.setData(new LocationDetails(entity.getKey().getName(),(double)entity.getProperty("lat"),(double)entity.getProperty("lng")));
+        }
+
         return response;
 
     }

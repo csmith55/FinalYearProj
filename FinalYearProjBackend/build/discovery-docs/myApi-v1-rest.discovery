@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"c05bU6zpvXPOpQakG5gG3IOJh8Y/zJxAdVI1WVBwmOS1TUd7y7gEziA\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/nXSq9Fk9I0gmDXDmga5SK9U1l2o\"",
  "discoveryVersion": "v1",
  "id": "myApi:v1",
  "name": "myApi",
@@ -73,6 +73,23 @@
   }
  },
  "schemas": {
+  "LocationDetails": {
+   "id": "LocationDetails",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "lat": {
+     "type": "number",
+     "format": "double"
+    },
+    "lng": {
+     "type": "number",
+     "format": "double"
+    }
+   }
+  },
   "MyBean": {
    "id": "MyBean",
    "type": "object",
@@ -85,9 +102,32 @@
      }
     }
    }
+  },
+  "MyRTreeBean": {
+   "id": "MyRTreeBean",
+   "type": "object",
+   "properties": {
+    "data": {
+     "type": "array",
+     "items": {
+      "$ref": "LocationDetails"
+     }
+    }
+   }
   }
  },
  "methods": {
+  "getAllLocations": {
+   "id": "myApi.getAllLocations",
+   "path": "myrtreebean",
+   "httpMethod": "GET",
+   "response": {
+    "$ref": "MyRTreeBean"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
   "getLocation": {
    "id": "myApi.getLocation",
    "path": "mybean/{facebookId}",
