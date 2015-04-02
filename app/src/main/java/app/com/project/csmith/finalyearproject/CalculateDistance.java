@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.facebook.model.GraphUser;
 import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.model.LatLng;
 import com.infomatiq.jsi.Point;
@@ -30,24 +29,24 @@ import gnu.trove.TIntProcedure;
 public class CalculateDistance extends AsyncTask<Void,Void,Void> {
 
     private final MainFragment mainFragment;
-    private final ArrayList<FBFriendDetails> allDetails;
-    private final List<GraphUser> fbFriends;
+    private final ArrayList<FBFriendDetails> friendDetails;
+
     private LatLng usersLatLng;
     private final ArrayList<FBFriendDetails> actualFBFriends;
 
 
 
-    public CalculateDistance(ArrayList<FBFriendDetails> allDetails, MainFragment mainFragment, LatLng usersLatLng, List<GraphUser> fbFriends) {
-        this.allDetails = allDetails;
+    public CalculateDistance(ArrayList<FBFriendDetails> friendDetails, MainFragment mainFragment, LatLng usersLatLng) {
+        this.friendDetails = friendDetails;
         this.mainFragment = mainFragment;
         this.usersLatLng = usersLatLng;
-        this.fbFriends = fbFriends;
+
         this.actualFBFriends = new ArrayList<>();
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-        for(FBFriendDetails details : allDetails) {
+        for(FBFriendDetails details : friendDetails) {
             String jsonDetailsString = UrlUtility.makeConnection(details.getLatLng(),usersLatLng);
             try {
                getDetailsFromJson(jsonDetailsString, details);
@@ -79,13 +78,15 @@ public class CalculateDistance extends AsyncTask<Void,Void,Void> {
     protected void onPostExecute(Void aDouble) {
 
        //check what type of query then filter out the results
+        Collections.sort(friendDetails, new CustomCompator());
+
 
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(mainFragment.getActivity());
         final String value = preference.getString("value", "10000");
         final String type = preference.getString("units", "default value");
 
-        for(int i = 0; i < allDetails.size(); i++){
-            addFriendToResults(allDetails.get(i),i);
+        for(int i = 0; i < friendDetails.size(); i++){
+            addFriendToResults(friendDetails.get(i),i);
         }
 
 
@@ -96,15 +97,15 @@ public class CalculateDistance extends AsyncTask<Void,Void,Void> {
     }
 
     private void rangeFriendsQuery(String value) {
-        Collections.sort(allDetails, new CustomCompator());
+        Collections.sort(friendDetails, new CustomCompator());
         int maxDistance = Integer.parseInt(value);
 
-        for (int i = 0; i < allDetails.size(); i++) {
+        for (int i = 0; i < friendDetails.size(); i++) {
 
 
-            if (allDetails.get(i).getDistance() <= maxDistance) {
+            if (friendDetails.get(i).getDistance() <= maxDistance) {
 
-                addFriendToResults(allDetails.get(i), i);
+                addFriendToResults(friendDetails.get(i), i);
 
             }
 
@@ -113,14 +114,14 @@ public class CalculateDistance extends AsyncTask<Void,Void,Void> {
 
 
     private void nearestFriendsQuery(String value) {
-        Collections.sort(allDetails, new CustomCompator());
+        Collections.sort(friendDetails, new CustomCompator());
 
         int numOfFriends = Integer.parseInt(value);
-        if (numOfFriends > allDetails.size())
-            numOfFriends = allDetails.size();
+        if (numOfFriends > friendDetails.size())
+            numOfFriends = friendDetails.size();
 
         for (int i = 0; i < numOfFriends; i++){
-            addFriendToResults(allDetails.get(i),i);
+            addFriendToResults(friendDetails.get(i),i);
         }
 
     }
@@ -137,37 +138,32 @@ public class CalculateDistance extends AsyncTask<Void,Void,Void> {
         for (float row = (float) (usersLatLng.latitude-1); row < usersLatLng.latitude+1; row+=0.01f)
             for (float column  = (float) (usersLatLng.longitude-1); column < usersLatLng.longitude+1; column+=0.01f) {
                 rects[id] = new Rectangle(row, column, row+0.01f, column+0.01f);
+                System.out.println("Rectangle" + id + " " + rects[id]);
                 si.add(rects[id],id); //
                 id++;
             }
 
 
         final Point p = new Point((float)usersLatLng.latitude, (float)usersLatLng.longitude);
-
+        int index = 0;
         si.nearestN(p, new TIntProcedure() {
             public boolean execute(int i) {
                 Log.d("Tag","Rectangle " + i + " " + rects[i] + ", distance=" + rects[i].distance(p));
                 float x,y;
 
-                for(int j = 0; j < allDetails.size(); j++){
-                    x = (float) allDetails.get(j).getLatLng().latitude;
-                    y = (float) allDetails.get(j).getLatLng().longitude;
+                for(int j = 0; j < friendDetails.size(); j++){
+                    x = (float) friendDetails.get(j).getLatLng().latitude;
+                    y = (float) friendDetails.get(j).getLatLng().longitude;
                     Rectangle rectangle = new Rectangle(x,y,x+0.01f,y+0.01f);
-
                     if(rects[i].intersects(rectangle)){
-                        for(GraphUser user: fbFriends){
-                            if(user.getId().equals(allDetails.get(j).getID()) && actualFBFriends.size() <= Integer.valueOf(value)){
-                                actualFBFriends.add(allDetails.get(j));
-                                break;
-                            }
-                        }
+                        actualFBFriends.add(friendDetails.get(j));
                     }
                 }
                 return true;
             }
         }, 20, Float.MAX_VALUE);
 
-        new CalculateDistance(actualFBFriends,mainFragment,usersLatLng,fbFriends).execute();
+        new CalculateDistance(actualFBFriends,mainFragment,usersLatLng).execute();
 
     }
 

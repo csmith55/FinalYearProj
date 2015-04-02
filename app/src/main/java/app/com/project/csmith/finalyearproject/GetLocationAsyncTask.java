@@ -60,7 +60,7 @@ import java.util.List;
     @Override
     protected void onPostExecute(Void aVoid){
         if(!friendDetails.isEmpty())
-             new CalculateDistance(friendDetails,mainFragment,usersLatLng,graphUsers).execute();
+             new CalculateDistance(friendDetails,mainFragment,usersLatLng).rtreeQuery("5");
 
     }
 
