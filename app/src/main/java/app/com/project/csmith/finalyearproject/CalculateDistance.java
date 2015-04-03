@@ -82,22 +82,20 @@ public class CalculateDistance extends AsyncTask<Void,Void,Void> {
 
 
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(mainFragment.getActivity());
-        final String value = preference.getString("value", "10000");
-        final String type = preference.getString("units", "default value");
+       /* final String value = preference.getString("value", "10000");
+        final String type = preference.getString("units", "default value");*/
 
-        for(int i = 0; i < friendDetails.size(); i++){
-            addFriendToResults(friendDetails.get(i),i);
+        final String type = "Nearest";
+        if(type.contains("Nearest")){
+            nearestFriendsQuery("1");
         }
-
-
-
-
+        else rangeFriendsQuery("9");
 
 
     }
 
     private void rangeFriendsQuery(String value) {
-        Collections.sort(friendDetails, new CustomCompator());
+
         int maxDistance = Integer.parseInt(value);
 
         for (int i = 0; i < friendDetails.size(); i++) {
@@ -114,7 +112,7 @@ public class CalculateDistance extends AsyncTask<Void,Void,Void> {
 
 
     private void nearestFriendsQuery(String value) {
-        Collections.sort(friendDetails, new CustomCompator());
+
 
         int numOfFriends = Integer.parseInt(value);
         if (numOfFriends > friendDetails.size())
@@ -126,17 +124,19 @@ public class CalculateDistance extends AsyncTask<Void,Void,Void> {
 
     }
 
-    protected void rtreeQuery(final String value){
+    protected void rtreeQuery(final int value){
 
 
         SpatialIndex si = new RTree();
         si.init(null);
 
+        float distanceSearchBase = (float) ((value)/111.0);
 
-        final Rectangle[] rects = new Rectangle[100000];
+
+        final Rectangle[] rects = new Rectangle[40*value];
         int id = 0;
-        for (float row = (float) (usersLatLng.latitude-1); row < usersLatLng.latitude+1; row+=0.01f)
-            for (float column  = (float) (usersLatLng.longitude-1); column < usersLatLng.longitude+1; column+=0.01f) {
+        for (float row = (float) (usersLatLng.latitude-distanceSearchBase); row < usersLatLng.latitude+distanceSearchBase; row+=0.01f)
+            for (float column  = (float) (usersLatLng.longitude-distanceSearchBase); column < usersLatLng.longitude+distanceSearchBase; column+=0.01f) {
                 rects[id] = new Rectangle(row, column, row+0.01f, column+0.01f);
                 System.out.println("Rectangle" + id + " " + rects[id]);
                 si.add(rects[id],id); //
@@ -145,23 +145,26 @@ public class CalculateDistance extends AsyncTask<Void,Void,Void> {
 
 
         final Point p = new Point((float)usersLatLng.latitude, (float)usersLatLng.longitude);
-        int index = 0;
+
         si.nearestN(p, new TIntProcedure() {
+
             public boolean execute(int i) {
                 Log.d("Tag","Rectangle " + i + " " + rects[i] + ", distance=" + rects[i].distance(p));
                 float x,y;
 
+
                 for(int j = 0; j < friendDetails.size(); j++){
                     x = (float) friendDetails.get(j).getLatLng().latitude;
                     y = (float) friendDetails.get(j).getLatLng().longitude;
-                    Rectangle rectangle = new Rectangle(x,y,x+0.01f,y+0.01f);
+                    Rectangle rectangle = new Rectangle(x,y,x+0.001f,y+0.001f);
                     if(rects[i].intersects(rectangle)){
                         actualFBFriends.add(friendDetails.get(j));
                     }
+
                 }
                 return true;
             }
-        }, 20, Float.MAX_VALUE);
+        }, 500, Float.MAX_VALUE);
 
         new CalculateDistance(actualFBFriends,mainFragment,usersLatLng).execute();
 
