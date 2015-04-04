@@ -1,24 +1,29 @@
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.Places;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import app.com.project.csmith.finalyearproject.PlaceDetails.Reviews;
+
 /**
  * Created by csmith on 05/02/15.
  */
-public class Places implements Parcelable{
-    private double lng;
-    private double lat;
-    private String name;
-    private String type;
-    private String placeId;
-    private String website;
-    private String phoneNumber;
-    private double reviewRating;
-    private String image;
+public class Places implements Parcelable {
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Places> CREATOR = new Parcelable.Creator<Places>() {
+        @Override
+        public Places createFromParcel(Parcel in) {
+            return new Places(in);
+        }
+
+        @Override
+        public Places[] newArray(int size) {
+            return new Places[size];
+        }
+    };
+    private double lng,lat,reviewRating;
+    private String name, type, placeId, website, phoneNumber, image;
     private Reviews[] reviews;
-
-
 
     public Places(double lat, double lng, String name, String type, String placeId) {
         this.setLng(lng);
@@ -27,6 +32,19 @@ public class Places implements Parcelable{
         this.setType(type);
         this.setPlaceId(placeId);
 
+    }
+
+    protected Places(Parcel in) {
+        lng = in.readDouble();
+        lat = in.readDouble();
+        name = in.readString();
+        type = in.readString();
+        placeId = in.readString();
+        website = in.readString();
+        phoneNumber = in.readString();
+        reviewRating = in.readDouble();
+        image = in.readString();
+        reviews = (Reviews[]) in.readArray(Reviews.class.getClassLoader());
     }
 
     public double getLng() {
@@ -61,12 +79,12 @@ public class Places implements Parcelable{
         this.type = type;
     }
 
-    public void setPlaceId(String placeId) {
-        this.placeId = placeId;
-    }
-
     public String getPlaceId() {
         return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
     }
 
     public String getWebsite() {
@@ -109,19 +127,6 @@ public class Places implements Parcelable{
         this.reviews = reviews;
     }
 
-    protected Places(Parcel in) {
-        lng = in.readDouble();
-        lat = in.readDouble();
-        name = in.readString();
-        type = in.readString();
-        placeId = in.readString();
-        website = in.readString();
-        phoneNumber = in.readString();
-        reviewRating = in.readDouble();
-        image = in.readString();
-        reviews = (Reviews[]) in.readArray(Reviews.class.getClassLoader());
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -140,17 +145,4 @@ public class Places implements Parcelable{
         dest.writeString(image);
         dest.writeArray(reviews);
     }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Places> CREATOR = new Parcelable.Creator<Places>() {
-        @Override
-        public Places createFromParcel(Parcel in) {
-            return new Places(in);
-        }
-
-        @Override
-        public Places[] newArray(int size) {
-            return new Places[size];
-        }
-    };
 }

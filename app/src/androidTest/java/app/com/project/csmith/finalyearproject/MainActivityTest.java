@@ -4,6 +4,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.test.ActivityInstrumentationTestCase2;
 
+import app.com.project.csmith.finalyearproject.UIPermissions.MainActivity;
+
 public class MainActivityTest extends ActivityInstrumentationTestCase2 {
 
     public MainActivityTest() {
@@ -14,8 +16,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2 {
         MainActivity activity = (MainActivity) getActivity();
 
         assertEquals(R.id.splashFragment, activity.getFragments()[0].getId());
-        assertEquals(R.id.selectionFragment,activity.getFragments()[1].getId());
-        assertEquals(R.id.userSettingsFragment,activity.getFragments()[2].getId());
+        assertEquals(R.id.selectionFragment, activity.getFragments()[1].getId());
+        assertEquals(R.id.userSettingsFragment, activity.getFragments()[2].getId());
 
         assertTrue(activity.getFragments()[0].isHidden());
         assertTrue(activity.getFragments()[2].isHidden());
@@ -27,7 +29,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2 {
     public void testOnPrepareOptionsMenu() throws Exception {
 
 
-
     }
 
     public void testOnOptionsItemSelected() throws Exception {
@@ -37,11 +38,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2 {
         FragmentManager fm = activity.getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
 
-        for(int i =0; i < activity.getFragments().length; i++){
+        for (int i = 0; i < activity.getFragments().length; i++) {
             transaction.hide(activity.getFragments()[i]);
         }
-
-
 
 
     }

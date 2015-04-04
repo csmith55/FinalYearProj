@@ -61,7 +61,7 @@ ADDED from AndroidManifest.xml:21:9
 		ADDED from AndroidManifest.xml:23:13
 	android:name
 		ADDED from AndroidManifest.xml:22:13
-activity#app.com.project.csmith.finalyearproject.MainActivity
+activity#app.com.project.csmith.finalyearproject.UIPermissions.MainActivity
 ADDED from AndroidManifest.xml:25:9
 	android:label
 		ADDED from AndroidManifest.xml:27:13
@@ -89,7 +89,7 @@ ADDED from AndroidManifest.xml:38:13
 		ADDED from AndroidManifest.xml:40:17
 	android:name
 		ADDED from AndroidManifest.xml:39:17
-activity#app.com.project.csmith.finalyearproject.DetailActivity
+activity#app.com.project.csmith.finalyearproject.PlaceDetails.DetailActivity
 ADDED from AndroidManifest.xml:44:9
 	android:label
 		ADDED from AndroidManifest.xml:46:13
@@ -97,7 +97,7 @@ ADDED from AndroidManifest.xml:44:9
 		ADDED from AndroidManifest.xml:47:13
 	android:name
 		ADDED from AndroidManifest.xml:45:13
-activity#app.com.project.csmith.finalyearproject.SettingsActivity
+activity#app.com.project.csmith.finalyearproject.UIPermissions.SettingsActivity
 ADDED from AndroidManifest.xml:52:9
 	android:label
 		ADDED from AndroidManifest.xml:54:13

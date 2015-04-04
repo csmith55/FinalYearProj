@@ -1,4 +1,4 @@
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.Utilities;
 
 import android.content.Context;
 import android.location.Address;
@@ -13,9 +13,9 @@ import java.util.Locale;
 /**
  * Created by csmith on 05/03/15.
  */
-abstract class GeocoderUtil {
+public abstract class GeocoderUtil {
 
-    public static List<Address> convertLatLngToAddress(LatLng latLng, Context context){
+    public static List<Address> convertLatLngToAddress(LatLng latLng, Context context) {
         Geocoder geocoder;
 
         geocoder = new Geocoder(context, Locale.getDefault());

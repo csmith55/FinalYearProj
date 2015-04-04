@@ -1,4 +1,4 @@
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.Places;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
@@ -26,6 +26,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.com.project.csmith.finalyearproject.R;
+import app.com.project.csmith.finalyearproject.Utilities.GeocoderUtil;
+
 /**
  * Created by csmith on 09/02/15.
  */
@@ -34,6 +37,7 @@ import java.util.List;
 public class PlacesFragment extends Fragment implements View.OnClickListener {
 
 
+    public static final String LAT_LNG = "latLng";
     List<Button> buttons = new ArrayList<>(7);
     Button blueButton, cyanButton, greenButton, orangeButton, magentaButton, violetButton, findOutMore;
     FetchPlaces fetchPlaces;
@@ -50,16 +54,11 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
         LatLng latLng;
 
         Intent intent = getActivity().getIntent();
-        if (intent != null && intent.hasExtra("latLng")) {
-            latLng = intent.getParcelableExtra("latLng");
+        if (intent != null && intent.hasExtra(LAT_LNG)) {
+            latLng = intent.getParcelableExtra(LAT_LNG);
 
-            List<Address> addresses = GeocoderUtil.convertLatLngToAddress(latLng,getActivity());
-
-
-            ((TextView) rootView.findViewById(R.id.userLoc)).setText(addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getAddressLine(1));
+            displayAddressInfo(rootView, latLng);
             setupButtons(rootView);
-
-
             GoogleMap map = getMapFragment().getMap();
             map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
@@ -81,6 +80,11 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
         }
 
         return rootView;
+    }
+
+    private void displayAddressInfo(View rootView, LatLng latLng) {
+        List<Address> addresses = GeocoderUtil.convertLatLngToAddress(latLng, getActivity());
+        ((TextView) rootView.findViewById(R.id.userLoc)).setText(addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getAddressLine(1));
     }
 
     private void setupButtons(View rootView) {
@@ -204,8 +208,6 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
 
         return (MapFragment) fm.findFragmentById(R.id.placesMap);
     }
-
-
 
 
 }

@@ -1,109 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:weightSum="1">
 
     <fragment
         android:id="@+id/placesMap"
+        class="com.google.android.gms.maps.MapFragment"
         android:layout_width="395dp"
         android:layout_height="369dp"
-        class="com.google.android.gms.maps.MapFragment"
-        android:layout_gravity="center_horizontal|bottom"
+        android:layout_above="@+id/button2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/button2"
-        android:layout_below="@+id/greenMarker" />
+        android:layout_below="@+id/greenMarker"
+        android:layout_gravity="center_horizontal|bottom" />
 
     <TextView
+        android:id="@+id/userLoc"
         android:layout_width="wrap_content"
         android:layout_height="56dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_gravity="center_horizontal|top"
         android:text="@string/UserLocation"
-        android:id="@+id/userLoc"
-        android:layout_gravity="center_horizontal|top" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
+        android:id="@+id/blueMarker"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/BlueMarkers"
-        android:id="@+id/blueMarker"
+        android:layout_alignEnd="@+id/greenMarker"
 
-        android:layout_gravity="left|top"
-        android:layout_below="@+id/userLoc"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/greenMarker"
-        android:layout_alignEnd="@+id/greenMarker" />
+        android:layout_below="@+id/userLoc"
+        android:layout_gravity="left|top"
+        android:text="@string/BlueMarkers" />
 
     <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/GreenMarker"
         android:id="@+id/greenMarker"
-
-        android:layout_alignTop="@+id/orangeMarker"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/orangeMarker"
+        android:text="@string/GreenMarker" />
 
     <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/VioletMarker"
         android:id="@+id/violetMarker"
-
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignTop="@+id/blueMarker"
-        android:layout_centerHorizontal="true" />
+
+        android:layout_centerHorizontal="true"
+        android:text="@string/VioletMarker" />
 
     <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Magenta"
         android:id="@+id/magentaMarker"
-
-        android:layout_above="@+id/placesMap"
-        android:layout_alignLeft="@+id/violetMarker"
-        android:layout_alignStart="@+id/violetMarker"
-        android:layout_alignRight="@+id/violetMarker"
-        android:layout_alignEnd="@+id/violetMarker" />
-
-    <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/CyanMarker"
-        android:id="@+id/cyanMarker"
+        android:layout_above="@+id/placesMap"
 
+        android:layout_alignEnd="@+id/violetMarker"
+        android:layout_alignLeft="@+id/violetMarker"
+        android:layout_alignRight="@+id/violetMarker"
+        android:layout_alignStart="@+id/violetMarker"
+        android:text="@string/Magenta" />
+
+    <Button
+        android:id="@+id/cyanMarker"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+
+        android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/violetMarker"
-        android:layout_toRightOf="@+id/findOutMore"
         android:layout_marginLeft="27dp"
         android:layout_marginStart="27dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_toRightOf="@+id/findOutMore"
+        android:text="@string/CyanMarker" />
 
     <Button
+        android:id="@+id/orangeMarker"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/OrangeMarker"
-        android:id="@+id/orangeMarker"
+        android:layout_alignEnd="@+id/cyanMarker"
 
-        android:layout_below="@+id/cyanMarker"
         android:layout_alignLeft="@+id/cyanMarker"
-        android:layout_alignStart="@+id/cyanMarker"
         android:layout_alignRight="@+id/cyanMarker"
-        android:layout_alignEnd="@+id/cyanMarker" />
+        android:layout_alignStart="@+id/cyanMarker"
+        android:layout_below="@+id/cyanMarker"
+        android:text="@string/OrangeMarker" />
 
     <Button
+        android:id="@+id/findOutMore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/FindOutMore"
-        android:id="@+id/findOutMore"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="@string/FindOutMore" />
 
 </RelativeLayout>

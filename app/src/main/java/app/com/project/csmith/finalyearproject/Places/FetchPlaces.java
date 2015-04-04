@@ -1,4 +1,4 @@
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.Places;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -17,43 +17,61 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import app.com.project.csmith.finalyearproject.Utilities.UrlUtility;
+
 class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
+    public static final String LOCATION = "location";
+    public static final String LAT = "lat";
+    public static final String LNG = "lng";
+    public static final String PLACE_ID = "place_id";
     private final String LOG_TAG = FetchPlaces.class.getSimpleName();
-    private final String[] foodDrink, entertainment, shopping, healthBeauty, services;
+    private String[] foodDrink, entertainment, shopping, healthBeauty, services;
     private LatLng latLng;
     private GoogleMap googleMap;
-    private ArrayList<Marker> entertainmentMarkers, foodDrinkMarkers, shoppingMarkers, healthBeautyMarkers, servicesMarkers;
-    private ArrayList<Marker> otherMarkers = new ArrayList<>();
+    private ArrayList<Marker> otherMarkers, entertainmentMarkers, foodDrinkMarkers, shoppingMarkers, healthBeautyMarkers, servicesMarkers;
     private Places[] pArray;
     private Places currentPlace;
     private Button findOutMore;
+    final String RESULTS = "results";
+    final String GEOMETRY = "geometry";
+    final String NAME = "name";
+    final String TYPES = "types";
 
     public FetchPlaces(Button findOutMore) {
         this.findOutMore = findOutMore;
 
+        initialiseMarkers();
+
+        assignMarkersContent();
+    }
+
+    private void assignMarkersContent() {
+        foodDrink = new String[]{"cafe", "bar", "meal_delivery", "meal_takeaway", "restaurant", "food", "bakery"};
+        entertainment = new String[]{"amusement_park", "bowling_alley", "casino", "gym", "movie_rental", "movie_theater",
+                "night_club", "stadium", "aquarium", "zoo"};
+        shopping = new String[]{"bicycle_store", "book_store", "clothing_store", "convenience_store", "department_store",
+                "electronics_store", "florist", "furniture_store", "grocery_or_supermarket", "hardware_store", "home_goods_store",
+                "jewelry_store", "liquor_store", "pet_store", "shopping_mall", "shoe_store", "store"};
+        healthBeauty = new String[]{"beauty_salon", "dentist", "doctor", "hair_care", "health", "hospital", "pharmacy",
+                "physiotherapist", "spa", "veterinary_care"};
+        services = new String[]{"atm", "bank", "bus_station", "car_rental", "car_dealer", "car_repair", "car_wash", "electrician",
+                "fire_station", "gas_station", "laundry", "library", "lodging", "plumber", "police", "real_estate_agency",
+                "subway_station", "taxi_stand", "train_station", "travel_agency"};
+    }
+
+    private void initialiseMarkers() {
         entertainmentMarkers = new ArrayList<>();
         foodDrinkMarkers = new ArrayList<>();
         shoppingMarkers = new ArrayList<>();
         healthBeautyMarkers = new ArrayList<>();
         servicesMarkers = new ArrayList<>();
         otherMarkers = new ArrayList<>();
-
-        foodDrink = new String[]{"cafe", "bar", "meal_delivery", "meal_takeaway", "restaurant", "food", "bakery"};
-        entertainment = new String[]{"amusement_park", "bowling_alley", "casino", "gym", "movie_rental", "movie_theater", "night_club", "stadium", "aquarium", "zoo"};
-        shopping = new String[]{"bicycle_store", "book_store", "clothing_store", "convenience_store", "department_store", "electronics_store", "florist", "furniture_store", "grocery_or_supermarket", "hardware_store", "home_goods_store", "jewelry_store", "liquor_store", "pet_store", "shopping_mall", "shoe_store", "store"};
-        healthBeauty = new String[]{"beauty_salon", "dentist", "doctor", "hair_care", "health", "hospital", "pharmacy", "physiotherapist", "spa", "veterinary_care"};
-        services = new String[]{"atm", "bank", "bus_station", "car_rental", "car_dealer", "car_repair", "car_wash", "electrician", "fire_station", "gas_station", "laundry", "library", "lodging", "plumber", "police", "real_estate_agency", "subway_station", "taxi_stand", "train_station", "travel_agency"};
     }
 
 
     private Places[] getPlacesFromJson(String placesJson)
             throws JSONException {
-
-        final String RESULTS = "results";
-        final String GEOMETRY = "geometry";
-        final String NAME = "name";
-        final String TYPES = "types";
 
         JSONObject places = new JSONObject(placesJson);
         JSONArray placesArray = places.getJSONArray(RESULTS);
@@ -71,15 +89,14 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
         for (int i = 0; i < placesArray.length(); i++) {
 
             JSONObject jsonPlace = placesArray.getJSONObject(i);
-            double lat = jsonPlace.getJSONObject(GEOMETRY).getJSONObject("location").getDouble("lat");
-            double lng = jsonPlace.getJSONObject(GEOMETRY).getJSONObject("location").getDouble("lng");
+            double lat = jsonPlace.getJSONObject(GEOMETRY).getJSONObject(LOCATION).getDouble(LAT);
+            double lng = jsonPlace.getJSONObject(GEOMETRY).getJSONObject(LOCATION).getDouble(LNG);
             String name = jsonPlace.getString(NAME);
             String type = jsonPlace.getString(TYPES);
-            String placeId = jsonPlace.getString("place_id");
+            String placeId = jsonPlace.getString(PLACE_ID);
 
 
             pArray[i] = new Places(lat, lng, name, type, placeId);
-
 
         }
     }
@@ -87,8 +104,6 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
     @Override
     protected Places[] doInBackground(GoogleMap... params) {
-        // android.os.Debug.waitForDebugger();
-
         googleMap = params[0];
 
         String placesJsonString = UrlUtility.makeConnection(latLng);
@@ -105,51 +120,70 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
     @Override
     protected void onPostExecute(Places[] places) {
 
-
-
-        Marker marker;
-
         for (Places place : places) {
-
-            if (containsPlace(place, foodDrink)) {
-                marker = addMarkerToMap(place, BitmapDescriptorFactory.HUE_VIOLET);
-                foodDrinkMarkers.add(marker);
-
-            } else if (containsPlace(place, entertainment)) {
-                marker = addMarkerToMap(place, BitmapDescriptorFactory.HUE_GREEN);
-                entertainmentMarkers.add(marker);
-            } else if (containsPlace(place, shopping)) {
-                marker = addMarkerToMap(place, BitmapDescriptorFactory.HUE_MAGENTA);
-                shoppingMarkers.add(marker);
-
-            } else if (containsPlace(place, healthBeauty)) {
-                marker = addMarkerToMap(place, BitmapDescriptorFactory.HUE_CYAN);
-                healthBeautyMarkers.add(marker);
-            } else if (containsPlace(place, services)) {
-                marker = addMarkerToMap(place, BitmapDescriptorFactory.HUE_AZURE);
-                servicesMarkers.add(marker);
-            } else {
-                marker = addMarkerToMap(place, BitmapDescriptorFactory.HUE_ORANGE);
-                otherMarkers.add(marker);
-            }
-
-
+            checkMarkerType(place);
         }
 
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if(pArray != null && marker.getTitle() != null) {
-                    for (Places place : pArray) {
-                        if (marker.getTitle().equals(place.getName())) {
-                            setCurrentPlace(place);
-                            findOutMore.setVisibility(View.VISIBLE);
-                        }
-                    }
+                if (pArray != null && marker.getTitle() != null) {
+                    setCurrentPlaceVisibility(marker);
                 }
                 return false;
             }
         });
+    }
+
+    private void setCurrentPlaceVisibility(Marker marker) {
+        for (Places place : pArray) {
+            if (marker.getTitle().equals(place.getName())) {
+                setCurrentPlace(place);
+                findOutMore.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private void checkMarkerType(Places place) {
+        if (containsPlace(place, foodDrink)) {
+            addFoodDrinkMarker(place);
+
+        } else if (containsPlace(place, entertainment)) {
+            addEntertainmentMarker(place);
+        } else if (containsPlace(place, shopping)) {
+            addShoppingMarker(place);
+
+        } else if (containsPlace(place, healthBeauty)) {
+            addHealthMarker(place);
+        } else if (containsPlace(place, services)) {
+            addServicesMarker(place);
+        } else {
+            addOthersMarker(place);
+        }
+    }
+
+    private void addOthersMarker(Places place) {
+        otherMarkers.add(addMarkerToMap(place, BitmapDescriptorFactory.HUE_ORANGE));
+    }
+
+    private void addServicesMarker(Places place) {
+        servicesMarkers.add(addMarkerToMap(place, BitmapDescriptorFactory.HUE_AZURE));
+    }
+
+    private void addHealthMarker(Places place) {
+        healthBeautyMarkers.add(addMarkerToMap(place, BitmapDescriptorFactory.HUE_CYAN));
+    }
+
+    private void addShoppingMarker(Places place) {
+        shoppingMarkers.add(addMarkerToMap(place, BitmapDescriptorFactory.HUE_MAGENTA));
+    }
+
+    private void addEntertainmentMarker(Places place) {
+        entertainmentMarkers.add(addMarkerToMap(place, BitmapDescriptorFactory.HUE_GREEN));
+    }
+
+    private void addFoodDrinkMarker(Places place) {
+        foodDrinkMarkers.add(addMarkerToMap(place, BitmapDescriptorFactory.HUE_VIOLET));
     }
 
 
@@ -161,16 +195,15 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
 
     }
 
-    private boolean containsPlace(Places place, String[] listedTypes){
-        for (String s : listedTypes){
-            if (place.getType().contains(s)){
+    private boolean containsPlace(Places place, String[] listedTypes) {
+        for (String s : listedTypes) {
+            if (place.getType().contains(s)) {
                 return true;
             }
 
         }
         return false;
     }
-
 
 
     public void loopServices() {
@@ -257,19 +290,19 @@ class FetchPlaces extends AsyncTask<GoogleMap, Void, Places[]> {
         this.otherMarkers = otherMarkers;
     }
 
-    public void setCurrentPlace(Places currentPlace) {
-        this.currentPlace = currentPlace;
-    }
-
     public Places getCurrentPlace() {
         return currentPlace;
     }
 
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
+    public void setCurrentPlace(Places currentPlace) {
+        this.currentPlace = currentPlace;
     }
 
     public LatLng getLatLng() {
         return latLng;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
     }
 }

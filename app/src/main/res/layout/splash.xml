@@ -19,8 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:gravity="center"
             android:contentDescription="@string/splash"
+            android:gravity="center"
             android:src="@drawable/ic_launcher" />
 
         <TextView

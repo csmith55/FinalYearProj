@@ -1,6 +1,8 @@
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.Utilities;
 
 import java.util.Comparator;
+
+import app.com.project.csmith.finalyearproject.AsyncTasks.FBFriendDetails;
 
 /**
  * Created by csmith on 05/03/15.
@@ -8,12 +10,10 @@ import java.util.Comparator;
 public class CustomCompator implements Comparator<FBFriendDetails> {
     @Override
     public int compare(FBFriendDetails lhs, FBFriendDetails rhs) {
-        if(lhs.getDistance() > rhs.getDistance()){
+        if (lhs.getDistance() > rhs.getDistance()) {
             return 1;
-        }
-        else if (lhs.getDistance() < rhs.getDistance()){
+        } else if (lhs.getDistance() < rhs.getDistance()) {
             return -1;
-        }
-        else return 0;
+        } else return 0;
     }
 }

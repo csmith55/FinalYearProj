@@ -1,7 +1,8 @@
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.PlaceDetails;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -25,6 +26,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import app.com.project.csmith.finalyearproject.Places.PlacesActivity;
+import app.com.project.csmith.finalyearproject.R;
+
 /**
  * Created by csmith on 09/02/15.
  */
@@ -32,7 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class DetailFragment extends Fragment {
 
-    private static final String LOG_TAG = app.com.project.csmith.finalyearproject.DetailFragment.class.getSimpleName();
+    private static final String LOG_TAG = DetailFragment.class.getSimpleName();
 
     private static final String hashTagShare = " #Friends";
 
@@ -55,23 +59,20 @@ public class DetailFragment extends Fragment {
 
         intent = getActivity().getIntent();
         if (checkIntentExtras()) {
-            locationString = intent.getStringExtra("FBNAMES");
-            text = locationString.split("Location:");
-            latLng = intent.getParcelableExtra("latLng");
-
-             setLocationAndCheckinInfo(rootView);
-
+            assignVariables();
+            setLocationAndCheckinInfo(rootView);
             setProfilePic(rootView);
-
-
             createGetInTouchButton(rootView);
-
             createMapAndMarker();
-
-
         }
 
         return rootView;
+    }
+
+    private void assignVariables() {
+        locationString = intent.getStringExtra("FBNAMES");
+        text = locationString.split("Location:");
+        latLng = intent.getParcelableExtra("latLng");
     }
 
     private void createMapAndMarker() {
@@ -113,7 +114,7 @@ public class DetailFragment extends Fragment {
     private void applyIntents() {
         Intent placesIntent = new Intent(getActivity(), PlacesActivity.class)
                 .putExtra("latLng", latLng);
-         startActivity(placesIntent);
+        startActivity(placesIntent);
     }
 
     private MapFragment getMapFragment() {
@@ -122,6 +123,13 @@ public class DetailFragment extends Fragment {
         Log.d("SDK", "sdk: " + Build.VERSION.SDK_INT);
         Log.d("RELEASE", "release: " + Build.VERSION.RELEASE);
 
+        fm = checkSDKVersionForFM();
+
+        return (MapFragment) fm.findFragmentById(R.id.map);
+    }
+
+    private FragmentManager checkSDKVersionForFM() {
+        FragmentManager fm;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             Log.d("GEO", "using getFragmentManager");
             fm = getFragmentManager();
@@ -129,8 +137,7 @@ public class DetailFragment extends Fragment {
             Log.d("GEO", "using getChildFragmentManager");
             fm = getChildFragmentManager();
         }
-
-        return (MapFragment) fm.findFragmentById(R.id.map);
+        return fm;
     }
 
 

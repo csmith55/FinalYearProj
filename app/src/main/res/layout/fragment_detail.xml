@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="app.com.project.csmith.finalyearproject.DetailActivity.DetailFragment">
+    tools:context="app.com.project.csmith.finalyearproject.PlaceDetails.DetailActivity.DetailFragment">
 
     <TextView
         android:id="@+id/detail_text"
@@ -44,23 +44,23 @@
 
     <fragment
         android:id="@+id/map"
+        class="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="com.google.android.gms.maps.MapFragment"
-        android:layout_below="@+id/profile_pic"
-        android:layout_alignParentRight="true"
+        android:layout_above="@+id/getInTouch"
         android:layout_alignParentEnd="true"
-        android:layout_above="@+id/getInTouch" />
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/profile_pic" />
 
     <Button
+        android:id="@+id/getInTouch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/GetInTouch"
-        android:id="@+id/getInTouch"
-
         android:layout_alignParentBottom="true"
+
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="88dp" />
+        android:layout_marginBottom="88dp"
+        android:text="@string/GetInTouch" />
 
 
 </RelativeLayout>

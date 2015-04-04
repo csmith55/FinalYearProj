@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.UIPermissions;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+
+import app.com.project.csmith.finalyearproject.R;
 
 
 public class SettingsActivity extends PreferenceActivity

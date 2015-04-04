@@ -1,4 +1,4 @@
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.PlaceDetails;
 
 /**
  * Created by csmith on 09/02/15.
@@ -8,7 +8,7 @@ public class Reviews {
     private double rating;
     private String text;
 
-    public Reviews(String author, double rating, String text){
+    public Reviews(String author, double rating, String text) {
         this.author = author;
         this.rating = rating;
         this.text = text;

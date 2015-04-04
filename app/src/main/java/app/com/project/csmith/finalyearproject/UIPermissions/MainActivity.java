@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.UIPermissions;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -38,6 +38,8 @@ import com.facebook.UiLifecycleHelper;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import app.com.project.csmith.finalyearproject.R;
 
 
 public class MainActivity extends FragmentActivity {
@@ -71,7 +73,7 @@ public class MainActivity extends FragmentActivity {
         uiHelper.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setFragments();
-       // new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "This is a toast to my dearest friend.. you!"));
+        // new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "This is a toast to my dearest friend.. you!"));
 
 
     }

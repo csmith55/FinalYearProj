@@ -1,4 +1,4 @@
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.AsyncTasks;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -29,12 +29,12 @@ public class FBFriendDetails {
         return latLng;
     }
 
-    public String getID() {
-        return id;
-    }
-
     public void setLatLng(LatLng latLng) {
         this.latLng = latLng;
+    }
+
+    public String getID() {
+        return id;
     }
 
     public String getName() {
@@ -45,19 +45,19 @@ public class FBFriendDetails {
         this.name = name;
     }
 
-    public void setDistance(Double distance) {
-        this.distance = distance;
-    }
-
     public Double getDistance() {
         return distance;
     }
 
-    public void setDistanceText(String distanceText) {
-        this.distanceText = distanceText;
+    public void setDistance(Double distance) {
+        this.distance = distance;
     }
 
     public String getDistanceText() {
         return distanceText;
+    }
+
+    public void setDistanceText(String distanceText) {
+        this.distanceText = distanceText;
     }
 }

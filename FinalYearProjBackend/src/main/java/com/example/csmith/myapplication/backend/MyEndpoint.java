@@ -29,9 +29,8 @@ public class MyEndpoint {
     DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
 
 
-
     @ApiMethod(name = "updateLocation")
-    public void updateLocation(@Named("fbId") String facebookId, @Named("Lng") Double lat, @Named("Lat") Double lng){
+    public void updateLocation(@Named("fbId") String facebookId, @Named("Lng") Double lat, @Named("Lat") Double lng) {
 
         Entity newLocation = new Entity("Location", facebookId);
         newLocation.setProperty("lat", lat);
@@ -42,7 +41,7 @@ public class MyEndpoint {
     }
 
     @ApiMethod(name = "getLocation")
-      public MyBean getLocation(@Named("facebookId") String facebookId) throws EntityNotFoundException {
+    public MyBean getLocation(@Named("facebookId") String facebookId) throws EntityNotFoundException {
 
         Key key = KeyFactory.createKey("Location", facebookId);
 
@@ -62,14 +61,13 @@ public class MyEndpoint {
     public MyRTreeBean getAllLocations() throws EntityNotFoundException {
 
 
-
         MyRTreeBean response = new MyRTreeBean();
 
         Query query = new Query("Location");
         PreparedQuery preparedQuery = datastoreService.prepare(query);
 
-        for(Entity entity : preparedQuery.asIterable()){
-            response.setData(new LocationDetails(entity.getKey().getName(),(double)entity.getProperty("lat"),(double)entity.getProperty("lng")));
+        for (Entity entity : preparedQuery.asIterable()) {
+            response.setData(new LocationDetails(entity.getKey().getName(), (double) entity.getProperty("lat"), (double) entity.getProperty("lng")));
         }
 
         return response;

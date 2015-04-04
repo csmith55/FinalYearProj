@@ -1,16 +1,20 @@
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.Places;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import app.com.project.csmith.finalyearproject.R;
+import app.com.project.csmith.finalyearproject.UIPermissions.SettingsActivity;
+
 /**
- * Created by csmith on 12/02/15.
+ * Created by csmith on 06/02/15.
  */
-public class PlaceDetailActivity extends Activity {
+public class PlacesActivity extends Activity {
 
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -20,18 +24,18 @@ public class PlaceDetailActivity extends Activity {
         setContentView(R.layout.activity_detail);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceDetailsFragment())
+                    .add(R.id.container, new PlacesFragment())
                     .commit();
         }
     }
 
 
-  /*  @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.detailfragment, menu);
-      //  return true;
-    }*/
+        getMenuInflater().inflate(R.menu.detail, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -46,4 +50,3 @@ public class PlaceDetailActivity extends Activity {
 
 
 }
-

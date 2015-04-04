@@ -9,7 +9,7 @@ public class LocationDetails {
     private final double lat;
     private final double lng;
 
-    public LocationDetails(String id, double lat, double lng){
+    public LocationDetails(String id, double lat, double lng) {
         this.id = id;
         this.lat = lat;
         this.lng = lng;

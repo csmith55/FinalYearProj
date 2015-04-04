@@ -1,4 +1,4 @@
-package app.com.project.csmith.finalyearproject;
+package app.com.project.csmith.finalyearproject.UIPermissions;
 
 
 import android.annotation.TargetApi;
@@ -33,6 +33,12 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import app.com.project.csmith.finalyearproject.AsyncTasks.UpdateLocationAsyncTask;
+import app.com.project.csmith.finalyearproject.AsyncTasks.FBFriendDetails;
+import app.com.project.csmith.finalyearproject.AsyncTasks.GetLocationAsyncTask;
+import app.com.project.csmith.finalyearproject.PlaceDetails.DetailActivity;
+import app.com.project.csmith.finalyearproject.R;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MainFragment extends android.support.v4.app.Fragment {
@@ -84,16 +90,12 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void updateFriends() {
-        if (Session.getActiveSession().isOpened())
-        {
+        if (Session.getActiveSession().isOpened()) {
             // Request user data and show the results
-            Request.newMeRequest(Session.getActiveSession(), new Request.GraphUserCallback()
-            {
+            Request.newMeRequest(Session.getActiveSession(), new Request.GraphUserCallback() {
                 @Override
-                public void onCompleted(GraphUser user, Response response)
-                {
-                    if (null != user)
-                    {
+                public void onCompleted(GraphUser user, Response response) {
+                    if (null != user) {
 
                         Log.v(TAG, "Response : " + response);
                         Log.v(TAG, "UserID : " + user.getId());
@@ -114,7 +116,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
                     public void onCompleted(List<GraphUser> graphUsers, Response response) {
                         if (activeSession == Session.getActiveSession()) {
                             if (graphUsers != null) {
-                                new GetLocationAsyncTask(graphUsers,friendDetails,mainFragment,new LatLng(getLocation().getLatitude(),getLocation().getLongitude())).execute();
+                                new GetLocationAsyncTask(graphUsers, friendDetails, mainFragment, new LatLng(getLocation().getLatitude(), getLocation().getLongitude())).execute();
                             }
                         }
 
@@ -128,7 +130,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
 
 
     }
@@ -166,7 +167,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
     private void createDetailActivityIntent(int position) {
         String name = getProfileName().getItem(position);
-         setIntent(new Intent(getActivity(), DetailActivity.class)
+        setIntent(new Intent(getActivity(), DetailActivity.class)
                 .putExtra(FBNAMES, name));
         getIntent().putExtra(FBPICS, friendDetails.get(position).getID());
         getIntent().putExtra("latLng", friendDetails.get(position).getLatLng());
@@ -185,8 +186,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                if(usersFacebookId != null)
-               new EndpointsAsyncTask(usersFacebookId).execute(new Pair<Context, LatLng>(getActivity(), new LatLng(location.getLatitude(),location.getLongitude())));
+                if (usersFacebookId != null)
+                    new UpdateLocationAsyncTask(usersFacebookId).execute(new Pair<Context, LatLng>(getActivity(), new LatLng(location.getLatitude(), location.getLongitude())));
 
             }
 
@@ -214,14 +215,13 @@ public class MainFragment extends android.support.v4.app.Fragment {
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
         Session session = Session.getActiveSession();
         if (session != null &&
                 (session.isOpened() || session.isClosed())) {
-                        onSessionStateChange(session.getState());
+            onSessionStateChange(session.getState());
         }
 
         uiHelper.onResume();
@@ -234,7 +234,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
         uiHelper.onActivityResult(requestCode, resultCode, data);
 
 
-        }
+    }
 
 
     @Override
@@ -264,10 +264,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
             Log.i(TAG, "Logged out!");
         }
     }
-
-
-
-
 
 
     public ArrayAdapter<String> getProfileName() {
