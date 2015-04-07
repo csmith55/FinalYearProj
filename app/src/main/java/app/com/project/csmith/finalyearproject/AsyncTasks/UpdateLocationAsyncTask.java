@@ -19,7 +19,7 @@ public class UpdateLocationAsyncTask extends AsyncTask<Pair<Context, LatLng>, Vo
 
     @Override
     protected Void doInBackground(Pair<Context, LatLng>... params) {
-        ApiBuilder.buildApi(myApiService);
+        myApiService = ApiBuilder.buildApi(myApiService);
 
         try {
             myApiService.updateLocation(facebookId, params[0].second.latitude, params[0].second.longitude).execute();

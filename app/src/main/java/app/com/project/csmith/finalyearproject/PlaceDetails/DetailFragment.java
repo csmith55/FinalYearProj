@@ -40,12 +40,13 @@ public class DetailFragment extends Fragment {
 
     private static final String hashTagShare = " #Friends";
 
-    private String locationString;
+    private String name;
     private LatLng latLng;
     private String text[] = new String[1];
     private int PROXIMITY_RADIUS = 500;
     private String GOOGLE_API_KEY = "AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
     private Intent intent;
+    private String location;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -70,8 +71,8 @@ public class DetailFragment extends Fragment {
     }
 
     private void assignVariables() {
-        locationString = intent.getStringExtra("FBNAMES");
-        text = locationString.split("Location:");
+        name = intent.getStringExtra("FBNAMES");
+        location = intent.getStringExtra("Location");
         latLng = intent.getParcelableExtra("latLng");
     }
 
@@ -82,7 +83,7 @@ public class DetailFragment extends Fragment {
                 .target(latLng).zoom(14).bearing(90).tilt(30).build();                   // Creates a CameraPosition from the builder
         map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        Marker marker = map.addMarker(new MarkerOptions().position(latLng).title(text[0]).snippet(text[1]));
+        Marker marker = map.addMarker(new MarkerOptions().position(latLng).title(name).snippet(location));
         marker.showInfoWindow();
     }
 
@@ -104,7 +105,7 @@ public class DetailFragment extends Fragment {
 
     private void setLocationAndCheckinInfo(View rootView) {
         ((TextView) rootView.findViewById(R.id.detail_text))
-                .setText(text[0]);
+                .setText(name);
     }
 
     private boolean checkIntentExtras() {

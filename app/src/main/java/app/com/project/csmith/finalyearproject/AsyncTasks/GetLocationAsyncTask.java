@@ -35,7 +35,7 @@ public class GetLocationAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        ApiBuilder.buildApi(myApiService);
+       myApiService = ApiBuilder.buildApi(myApiService);
 
         for (int i = 0; i < graphUsers.size(); i++) {
             try {
@@ -53,7 +53,7 @@ public class GetLocationAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         if (!friendDetails.isEmpty())
-            new CalculateDistance(friendDetails, mainFragment, usersLatLng).rtreeQuery(9);
+            new CalculateDistance(friendDetails, mainFragment, usersLatLng).rtreeQuery(10);
 
     }
 

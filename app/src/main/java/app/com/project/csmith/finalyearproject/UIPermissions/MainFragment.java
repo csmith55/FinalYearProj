@@ -4,6 +4,7 @@ package app.com.project.csmith.finalyearproject.UIPermissions;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.facebook.Request;
@@ -32,13 +32,16 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import app.com.project.csmith.finalyearproject.AsyncTasks.UpdateLocationAsyncTask;
 import app.com.project.csmith.finalyearproject.AsyncTasks.FBFriendDetails;
 import app.com.project.csmith.finalyearproject.AsyncTasks.GetLocationAsyncTask;
+import app.com.project.csmith.finalyearproject.AsyncTasks.UpdateLocationAsyncTask;
 import app.com.project.csmith.finalyearproject.PlaceDetails.DetailActivity;
 import app.com.project.csmith.finalyearproject.R;
+import app.com.project.csmith.finalyearproject.Utilities.CustomCompator;
+import app.com.project.csmith.finalyearproject.Utilities.GeocoderUtil;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MainFragment extends android.support.v4.app.Fragment {
@@ -53,11 +56,13 @@ public class MainFragment extends android.support.v4.app.Fragment {
             onSessionStateChange(state);
         }
     };
-    private ArrayAdapter<String> profileName;
+    private ListView resultsList;
     private ArrayList<FBFriendDetails> friendDetails = new ArrayList<>();
     private UiLifecycleHelper uiHelper;
     private String usersFacebookId;
     private MainFragment mainFragment = this;
+    CustomListAdapter customListAdapter;
+    View view;
 
     private Intent intent;
 
@@ -138,24 +143,33 @@ public class MainFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        setProfileName(new ArrayAdapter<>(getActivity(), R.layout.list_item, R.id.list_item_friend_textview, new ArrayList<String>()));
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+
+
+        view = inflater.inflate(R.layout.fragment_main, container, false);
         final Location lastKnown = getLocation();
 
         fbPermissionsLogin(view);
 
         // Find the user's profile picture custom view
         // Get a reference to the ListView, and attach this adapter to it.
-        setAdapterAndIntents(view, lastKnown);
+        setAdapterAndIntents(view, new ArrayList<FBFriendDetails>());
 
         return view;
 
     }
 
-    private void setAdapterAndIntents(View view, final Location lastKnown) {
-        ListView listView = (ListView) view.findViewById(R.id.listview_friend);
-        listView.setAdapter(getProfileName());
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void setAdapterAndIntents(View view,ArrayList<FBFriendDetails> details) {
+        ArrayList<String> address = new ArrayList<>();
+
+        for(int i = 0; i < details.size(); i++) {
+            List<Address> addresses = GeocoderUtil.convertLatLngToAddress(details.get(i).getLatLng(), getActivity());
+            address.add(addresses.get(0).getAddressLine(0));
+        }
+         customListAdapter = new CustomListAdapter(getActivity(),address,details);
+        resultsList = (ListView) view.findViewById(R.id.list);
+        resultsList.setAdapter(customListAdapter);
+        resultsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -166,9 +180,11 @@ public class MainFragment extends android.support.v4.app.Fragment {
     }
 
     private void createDetailActivityIntent(int position) {
-        String name = getProfileName().getItem(position);
+        String name = customListAdapter.getName(position);
         setIntent(new Intent(getActivity(), DetailActivity.class)
                 .putExtra(FBNAMES, name));
+        Collections.sort(friendDetails, new CustomCompator());
+        getIntent().putExtra("Location", customListAdapter.getLocation(position));
         getIntent().putExtra(FBPICS, friendDetails.get(position).getID());
         getIntent().putExtra("latLng", friendDetails.get(position).getLatLng());
         startActivity(getIntent());
@@ -266,12 +282,13 @@ public class MainFragment extends android.support.v4.app.Fragment {
     }
 
 
-    public ArrayAdapter<String> getProfileName() {
-        return profileName;
+    public ListView getResultsAdapter() {
+        return resultsList;
     }
 
-    public void setProfileName(ArrayAdapter<String> profileName) {
-        this.profileName = profileName;
+    public void setResultsAdapter(ArrayList<FBFriendDetails> profileName) {
+
+        setAdapterAndIntents(view,profileName);
     }
 
     public Intent getIntent() {
@@ -284,7 +301,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 
 }
-
 
 
 

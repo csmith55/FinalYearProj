@@ -1,7 +1,6 @@
 package app.com.project.csmith.finalyearproject.AsyncTasks;
 
 import android.content.SharedPreferences;
-import android.location.Address;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -19,12 +18,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
-import app.com.project.csmith.finalyearproject.R;
 import app.com.project.csmith.finalyearproject.UIPermissions.MainFragment;
 import app.com.project.csmith.finalyearproject.Utilities.CustomCompator;
-import app.com.project.csmith.finalyearproject.Utilities.GeocoderUtil;
 import app.com.project.csmith.finalyearproject.Utilities.UrlUtility;
 import gnu.trove.TIntProcedure;
 
@@ -35,7 +31,7 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
 
     private final MainFragment mainFragment;
     private final ArrayList<FBFriendDetails> friendDetails;
-    private final ArrayList<FBFriendDetails> actualFBFriends;
+    private final ArrayList<FBFriendDetails> actualFBFriends, resultFriends;
     private LatLng usersLatLng;
 
 
@@ -45,6 +41,7 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
         this.usersLatLng = usersLatLng;
 
         this.actualFBFriends = new ArrayList<>();
+        resultFriends = new ArrayList<>();
     }
 
     @Override
@@ -90,7 +87,7 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
 
         final String type = "Nearest";
         if (type.contains("Nearest")) {
-            nearestFriendsQuery("1");
+            nearestFriendsQuery("3");
         } else rangeFriendsQuery("9");
 
 
@@ -100,7 +97,7 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
         int maxDistance = Integer.parseInt(value);
         for (int i = 0; i < friendDetails.size(); i++) {
             if (friendDetails.get(i).getDistance() <= maxDistance) {
-                addFriendToResults(friendDetails.get(i), i);
+                addFriendToResults(friendDetails.get(i));
             }
         }
     }
@@ -114,7 +111,7 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
             numOfFriends = friendDetails.size();
 
         for (int i = 0; i < numOfFriends; i++) {
-            addFriendToResults(friendDetails.get(i), i);
+            addFriendToResults(friendDetails.get(i));
         }
 
     }
@@ -174,11 +171,19 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
         return rects;
     }
 
-    private void addFriendToResults(FBFriendDetails details, int index) {
+    private void addFriendToResults(FBFriendDetails details) {
         ProfilePictureView profilePictureView = null;
 
-        List<Address> addresses = GeocoderUtil.convertLatLngToAddress(details.getLatLng(), mainFragment.getActivity());
-        mainFragment.getProfileName().add(details.getName() + "\nLocation: " + addresses.get(0).getAddressLine(0) + "\nDistance: " + details.getDistanceText());
+        //  resultAddresses.add(GeocoderUtil.convertLatLngToAddress(details.getLatLng(), mainFragment.getActivity()));
+        resultFriends.add(details);
+        mainFragment.setResultsAdapter(resultFriends);
+    }
+
+
+       /* mainFragment.setResultsAdapter().add(details.getName() + "\nLocation: " + addresses.get(0).getAddressLine(0) + "\nDistance: " + details.getDistanceText());
+
+
+        mainFragment.getResultsAdapter().add();
 
 
         profilePictureView = addResult(index, profilePictureView);
@@ -193,23 +198,23 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
     private ProfilePictureView addResult(int index, ProfilePictureView profilePictureView) {
         switch (index) {
             case 0:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.profile_pic0);
+                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.icon);
                 break;
             case 1:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.profile_pic1);
+                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.icon);
                 break;
             case 2:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.profile_pic2);
+                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.icon);
                 break;
             case 3:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.profile_pic3);
+                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.icon);
                 break;
             case 4:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.profile_pic4);
+                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.icon);
                 break;
         }
         return profilePictureView;
-    }
+    }*/
 
 
 }
