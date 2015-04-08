@@ -52,7 +52,7 @@ public class GetAllLocationAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         if (!allDetails.isEmpty())
-            new CalculateDistance(allDetails, mainFragment, usersLatLng).rtreeQuery(5);
+            new CalculateDistance(allDetails, mainFragment, usersLatLng);
 
     }
 

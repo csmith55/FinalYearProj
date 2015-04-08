@@ -10,58 +10,61 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/PlaceName"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ImageView
         android:id="@+id/placeIcon"
         android:layout_width="61dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/placeRating"
         android:layout_gravity="right"
-        android:layout_weight="0.15" />
+        android:layout_weight="0.15"
+        android:layout_above="@+id/placeReviews"
+        android:layout_alignRight="@+id/placeRating"
+        android:layout_alignEnd="@+id/placeRating" />
 
     <TextView
         android:id="@+id/placeRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_alignTop="@+id/placeWebsite"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/placeWebsite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/placeNumber"
         android:autoLink="web"
         android:text="@string/website"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/placeNumber"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/placeNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/placeName"
-        android:layout_marginTop="57dp"
         android:autoLink="phone"
         android:text="@string/phoneNumber"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_below="@+id/placeName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ListView
         android:id="@+id/placeReviews"
         android:layout_width="match_parent"
         android:layout_height="350dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/placeWebsite"
-        android:layout_gravity="center_horizontal" />
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

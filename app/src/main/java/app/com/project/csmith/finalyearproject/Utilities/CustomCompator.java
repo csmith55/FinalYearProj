@@ -10,9 +10,9 @@ import app.com.project.csmith.finalyearproject.AsyncTasks.FBFriendDetails;
 public class CustomCompator implements Comparator<FBFriendDetails> {
     @Override
     public int compare(FBFriendDetails lhs, FBFriendDetails rhs) {
-        if (lhs.getDistance() > rhs.getDistance()) {
+        if (lhs.getMetricDistance() > rhs.getMetricDistance()) {
             return 1;
-        } else if (lhs.getDistance() < rhs.getDistance()) {
+        } else if (lhs.getMetricDistance() < rhs.getMetricDistance()) {
             return -1;
         } else return 0;
     }

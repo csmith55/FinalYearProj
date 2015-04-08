@@ -10,4 +10,12 @@
         <item>@string/pref_queryType_range</item>
         <item>@string/pref_queryType_nearest</item>
     </string-array>
+    <string-array name="pref_units_measurements_options">
+        <item>@string/pref_measurementsType_km</item>
+        <item>@string/pref_measurementsType_miles</item>
+    </string-array>
+    <string-array name="pref_units_measurements_values">
+        <item>@string/pref_measurementsType_km</item>
+        <item>@string/pref_measurementsType_miles</item>
+    </string-array>
 </resources>

@@ -40,38 +40,30 @@
         <activity
             android:name=".PlaceDetails.DetailActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".UIPermissions.MainActivity"
+
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UIPermissions.MainActivity" />
+
         </activity>
         <activity
             android:name=".Places.PlacesActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".PlaceDetails.DetailActivity"
+
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".PlaceDetails.DetailActivity" />
+
         </activity>
         <activity
             android:name=".Places.PlaceDetailActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".Places.PlacesActivity"
+
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".PlaceDetails.DetailActivity" />
+
         </activity>
         <activity
             android:name=".UIPermissions.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".UIPermissions.MainActivity"
+
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".UIPermissions.MainActivity" />
+
         </activity>
 
         <meta-data

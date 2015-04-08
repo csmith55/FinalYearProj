@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.maps.model.LatLng;
 import com.infomatiq.jsi.Point;
 import com.infomatiq.jsi.Rectangle;
@@ -22,7 +21,6 @@ import java.util.Collections;
 import app.com.project.csmith.finalyearproject.UIPermissions.MainFragment;
 import app.com.project.csmith.finalyearproject.Utilities.CustomCompator;
 import app.com.project.csmith.finalyearproject.Utilities.UrlUtility;
-import gnu.trove.TIntProcedure;
 
 /**
  * Created by csmith on 02/03/15.
@@ -30,10 +28,12 @@ import gnu.trove.TIntProcedure;
 public class CalculateDistance extends AsyncTask<Void, Void, Void> {
 
     private final MainFragment mainFragment;
-    private final ArrayList<FBFriendDetails> friendDetails;
+    private ArrayList<FBFriendDetails> friendDetails;
     private final ArrayList<FBFriendDetails> actualFBFriends, resultFriends;
     private LatLng usersLatLng;
-
+    private String type;
+    private String measurement;
+    private int value;
 
     public CalculateDistance(ArrayList<FBFriendDetails> friendDetails, MainFragment mainFragment, LatLng usersLatLng) {
         this.friendDetails = friendDetails;
@@ -42,6 +42,11 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
 
         this.actualFBFriends = new ArrayList<>();
         resultFriends = new ArrayList<>();
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(mainFragment.getActivity());
+        type = preference.getString("type","Nearest");
+        value = Integer.parseInt(preference.getString("value","3"));
+        measurement = preference.getString("measurements", "Km");
+        rtreeQuery(5);
     }
 
     @Override
@@ -68,7 +73,7 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
             JSONArray element = rows.getJSONObject(0).getJSONArray("elements");
             Log.d("SFHAUISFHIUAF", element.toString());
             details.setDistanceText(element.getJSONObject(0).getJSONObject("distance").getString("text"));
-            details.setDistance(element.getJSONObject(0).getJSONObject("distance").getDouble("value"));
+            details.setMetricDistance(element.getJSONObject(0).getJSONObject("distance").getDouble("value"));
         }
         return null;
 
@@ -79,142 +84,132 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
 
         //check what type of query then filter out the results
         Collections.sort(friendDetails, new CustomCompator());
-
-
-        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(mainFragment.getActivity());
-       /* final String value = preference.getString("value", "10000");
-        final String type = preference.getString("units", "default value");*/
-
-        final String type = "Nearest";
         if (type.contains("Nearest")) {
-            nearestFriendsQuery("3");
-        } else rangeFriendsQuery("9");
+            nearestFriendsQuery();
+        } else rangeFriendsQuery();
 
 
     }
 
-    private void rangeFriendsQuery(String value) {
-        int maxDistance = Integer.parseInt(value);
+    private void rangeFriendsQuery() {
+        double maxDistance = value;
+
+
         for (int i = 0; i < friendDetails.size(); i++) {
-            if (friendDetails.get(i).getDistance() <= maxDistance) {
-                addFriendToResults(friendDetails.get(i));
+            final FBFriendDetails friend = friendDetails.get(i);
+            if (measurement.contains("Miles")){
+                if(friend.getImperialDistance() <= maxDistance){
+                    friend.setDistanceText(String.format("%.2f", friend.getImperialDistance()) + " miles");
+                    resultFriends.add(friend);
+
+                }
+            }
+            else {
+                if (friend.getMetricDistance() <= maxDistance) {
+                    friend.setDistanceText(String.format("%.2f", friend.getMetricDistance()) + " km");
+                    resultFriends.add(friend);
+                }
             }
         }
+        addFriendToResults();
     }
 
 
-    private void nearestFriendsQuery(String value) {
-
-
-        int numOfFriends = Integer.parseInt(value);
+    private void nearestFriendsQuery() {
+        int numOfFriends = value;
         if (numOfFriends > friendDetails.size())
             numOfFriends = friendDetails.size();
 
         for (int i = 0; i < numOfFriends; i++) {
-            addFriendToResults(friendDetails.get(i));
+            final FBFriendDetails friend = friendDetails.get(i);
+            if(measurement.equals("Miles")){
+                friend.setDistanceText(String.format("%.2f", friend.getImperialDistance()) + " miles");
+            }
+            else {
+                friend.setDistanceText(String.format("%.2f", friend.getMetricDistance()) + " km");
+            }
+            resultFriends.add(friend);
+
         }
+        addFriendToResults();
 
     }
 
-    protected void rtreeQuery(final int value) {
-
-
+    private void rtreeQuery(int range) {
+        int intValue;
+        boolean isNearest =false;
+        if(type.contains("Range")) {
+            intValue = value;
+        }else {
+            isNearest = true;
+            if(value > friendDetails.size())
+            value = friendDetails.size();
+            intValue = range;
+        }
         SpatialIndex si = new RTree();
         si.init(null);
 
-        float distanceSearchBase = (float) ((value) / 111.0);
-
-
-        final Rectangle[] rects = createRectangles(value, si, distanceSearchBase);
+        float distanceSearchBase = (float) ((intValue) / 111.0);
+        final ArrayList<Rectangle> rects = createRectangles(intValue, si, distanceSearchBase);
 
 
         final Point p = new Point((float) usersLatLng.latitude, (float) usersLatLng.longitude);
 
-        si.nearestN(p, new TIntProcedure() {
+        for(int i = 0; i < rects.size(); i++){
+            checkIntersection(i,rects,p);
+        }
 
-            public boolean execute(int i) {
-                checkIntersection(i, rects, p);
-                return true;
-            }
-        }, 500, Float.MAX_VALUE);
 
-        new CalculateDistance(actualFBFriends, mainFragment, usersLatLng).execute();
+
+        if(isNearest && actualFBFriends.size() < value){
+            intValue = intValue * 2;
+            actualFBFriends.clear();
+            rtreeQuery(intValue);
+        }
+
+        friendDetails = actualFBFriends;
 
     }
 
-    private void checkIntersection(int i, Rectangle[] rects, Point p) {
-        Log.d("Tag", "Rectangle " + i + " " + rects[i] + ", distance=" + rects[i].distance(p));
+    private void checkIntersection(int i, ArrayList<Rectangle> rects, Point p) {
         float x, y;
-
-
         for (int j = 0; j < friendDetails.size(); j++) {
+            if(actualFBFriends.size() == value) break;
             x = (float) friendDetails.get(j).getLatLng().latitude;
             y = (float) friendDetails.get(j).getLatLng().longitude;
             Rectangle rectangle = new Rectangle(x, y, x + 0.001f, y + 0.001f);
-            if (rects[i].intersects(rectangle)) {
+            if (rects.get(i).intersects(rectangle))
+            {
+                if(!actualFBFriends.contains(friendDetails.get(j))){
                 actualFBFriends.add(friendDetails.get(j));
+
             }
+            }
+
+
 
         }
     }
 
-    private Rectangle[] createRectangles(int value, SpatialIndex si, float distanceSearchBase) {
-        final Rectangle[] rects = new Rectangle[40 * value];
+    private ArrayList<Rectangle> createRectangles(double value, SpatialIndex si, float distanceSearchBase) {
+       ArrayList<Rectangle> rects = new ArrayList<>();
+
         int id = 0;
         for (float row = (float) (usersLatLng.latitude - distanceSearchBase); row < usersLatLng.latitude + distanceSearchBase; row += 0.01f)
             for (float column = (float) (usersLatLng.longitude - distanceSearchBase); column < usersLatLng.longitude + distanceSearchBase; column += 0.01f) {
-                rects[id] = new Rectangle(row, column, row + 0.01f, column + 0.01f);
-                System.out.println("Rectangle" + id + " " + rects[id]);
-                si.add(rects[id], id); //
-                id++;
+                Rectangle rectangle = new Rectangle(row, column, row + 0.01f, column + 0.01f);
+                rects.add(rectangle);
+
+                si.add(rectangle, id++); //
+
             }
         return rects;
     }
 
-    private void addFriendToResults(FBFriendDetails details) {
-        ProfilePictureView profilePictureView = null;
-
-        //  resultAddresses.add(GeocoderUtil.convertLatLngToAddress(details.getLatLng(), mainFragment.getActivity()));
-        resultFriends.add(details);
-        mainFragment.setResultsAdapter(resultFriends);
+    private void addFriendToResults() {
+            mainFragment.setResultsAdapter(resultFriends);
     }
 
-
-       /* mainFragment.setResultsAdapter().add(details.getName() + "\nLocation: " + addresses.get(0).getAddressLine(0) + "\nDistance: " + details.getDistanceText());
-
-
-        mainFragment.getResultsAdapter().add();
-
-
-        profilePictureView = addResult(index, profilePictureView);
-
-
-        assert profilePictureView != null;
-        profilePictureView.setProfileId(details.getID());
-        profilePictureView.setCropped(true);
-
-    }
-
-    private ProfilePictureView addResult(int index, ProfilePictureView profilePictureView) {
-        switch (index) {
-            case 0:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.icon);
-                break;
-            case 1:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.icon);
-                break;
-            case 2:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.icon);
-                break;
-            case 3:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.icon);
-                break;
-            case 4:
-                profilePictureView = (ProfilePictureView) mainFragment.getView().findViewById(R.id.icon);
-                break;
-        }
-        return profilePictureView;
-    }*/
 
 
 }

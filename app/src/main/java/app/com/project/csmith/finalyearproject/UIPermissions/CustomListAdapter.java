@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.facebook.widget.ProfilePictureView;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
@@ -55,7 +56,15 @@ public class CustomListAdapter extends ArrayAdapter<String> {
        return profilePictureViews.get(position).getName();
     }
 
+    public String getID(int position){
+        return profilePictureViews.get(position).getID();
+    }
+
     public String getLocation(int position) {
         return addresses.get(position);
+    }
+
+    public LatLng getLatLng(int position) {
+        return profilePictureViews.get(position).getLatLng();
     }
 }

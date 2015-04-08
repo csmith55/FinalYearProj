@@ -2,12 +2,12 @@
 <resources>
 
 
-    <string name="app_name">GeoSocial Network</string>
+    <string name="app_name">GeoSocial</string>
 
     <string name="app_id">882702668415869</string>
 
 
-    <string name="action_settings">New Query</string>
+    <string name="action_settings">Find!</string>
     <string name="action_map">Map Location</string>
     <string name="action_share">Share</string>
     <string name="settings">Settings</string>
@@ -20,7 +20,7 @@
     <string name="pref_queryType_label">Query Type</string>
     <string name="pref_queryType_label_range">Range Friends</string>
     <string name="pref_queryType_label_nearest">Nearest Friends</string>
-    <string name="pref_queryType_key" translatable="false">units</string>
+    <string name="pref_queryType_key" translatable="false">type</string>
     <string name="pref_queryType_range" translatable="false">Range Friends</string>
     <string name="pref_queryType_nearest" translatable="false">Nearest Friends</string>
     <string name="get_started">Log in to get started!</string>
@@ -39,5 +39,9 @@
     <string name="phoneNumber">Medium Text</string>
     <string name="Go">New Button</string>
     <string name="FindOutMore">Find Out More</string>
+    <string name="pref_measurementsType_key">measurements</string>
+    <string name="pref_measurementsType_km">Km</string>
+    <string name="pref_measurementsType_miles">Miles</string>
+    <string name="pref_measurementsType_label">Unit of Measurement</string>
 
 </resources>

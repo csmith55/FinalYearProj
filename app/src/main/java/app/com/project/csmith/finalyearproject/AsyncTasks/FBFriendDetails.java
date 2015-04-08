@@ -45,11 +45,11 @@ public class FBFriendDetails {
         this.name = name;
     }
 
-    public Double getDistance() {
-        return distance;
+    public Double getMetricDistance() {
+        return distance/1000;
     }
 
-    public void setDistance(Double distance) {
+    public void setMetricDistance(Double distance) {
         this.distance = distance;
     }
 
@@ -59,5 +59,19 @@ public class FBFriendDetails {
 
     public void setDistanceText(String distanceText) {
         this.distanceText = distanceText;
+    }
+
+    public Double getImperialDistance() {
+        return (distance/1000)*0.621371192;
+    }
+
+
+    @Override
+    public boolean equals(Object obj){
+        final FBFriendDetails compareID = (FBFriendDetails) obj;
+        if(getID().equals(compareID.getID())){
+            return true;
+        }
+        return false;
     }
 }

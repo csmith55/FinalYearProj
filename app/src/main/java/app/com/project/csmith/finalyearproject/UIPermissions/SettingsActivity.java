@@ -36,6 +36,7 @@ public class SettingsActivity extends PreferenceActivity
 
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_value_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_queryType_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_measurementsType_key)));
     }
 
     private void bindPreferenceSummaryToValue(Preference preference) {

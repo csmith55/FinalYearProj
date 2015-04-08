@@ -32,7 +32,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import app.com.project.csmith.finalyearproject.AsyncTasks.FBFriendDetails;
@@ -40,7 +39,6 @@ import app.com.project.csmith.finalyearproject.AsyncTasks.GetLocationAsyncTask;
 import app.com.project.csmith.finalyearproject.AsyncTasks.UpdateLocationAsyncTask;
 import app.com.project.csmith.finalyearproject.PlaceDetails.DetailActivity;
 import app.com.project.csmith.finalyearproject.R;
-import app.com.project.csmith.finalyearproject.Utilities.CustomCompator;
 import app.com.project.csmith.finalyearproject.Utilities.GeocoderUtil;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -71,7 +69,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
         super.onCreate(savedInstanceState);
         uiHelper = new UiLifecycleHelper(getActivity(), callback);
         uiHelper.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+       setHasOptionsMenu(true);
         updateFriends();
 
 
@@ -80,6 +78,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
+
     }
 
     @Override
@@ -135,8 +134,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-
+        updateFriends();
     }
 
     @Override
@@ -183,10 +181,10 @@ public class MainFragment extends android.support.v4.app.Fragment {
         String name = customListAdapter.getName(position);
         setIntent(new Intent(getActivity(), DetailActivity.class)
                 .putExtra(FBNAMES, name));
-        Collections.sort(friendDetails, new CustomCompator());
+
         getIntent().putExtra("Location", customListAdapter.getLocation(position));
-        getIntent().putExtra(FBPICS, friendDetails.get(position).getID());
-        getIntent().putExtra("latLng", friendDetails.get(position).getLatLng());
+        getIntent().putExtra(FBPICS, customListAdapter.getID(position));
+        getIntent().putExtra("latLng", customListAdapter.getLatLng(position));
         startActivity(getIntent());
     }
 

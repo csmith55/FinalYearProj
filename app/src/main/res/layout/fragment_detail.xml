@@ -17,18 +17,23 @@
         android:textColor="#fff"
         android:textSize="20sp"
         android:textStyle="italic"
-        android:typeface="serif" />
+        android:typeface="serif"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/checkins"
+        android:layout_alignStart="@+id/checkins" />
 
     <com.facebook.widget.ProfilePictureView
         android:id="@+id/profile_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:layout_gravity="right"
         android:gravity="right"
-        facebook:preset_size="normal" />
+        facebook:preset_size="normal"
+        android:layout_alignTop="@+id/detail_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/getInTouch"
+        android:layout_toLeftOf="@+id/getInTouch" />
 
     <TextView
         android:id="@+id/checkins"
@@ -56,11 +61,10 @@
         android:id="@+id/getInTouch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
 
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="88dp"
-        android:text="@string/GetInTouch" />
+        android:text="@string/GetInTouch"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>
