@@ -15,11 +15,13 @@
  */
 package app.com.project.csmith.finalyearproject.UIPermissions;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 
 import app.com.project.csmith.finalyearproject.R;
 
@@ -33,10 +35,44 @@ public class SettingsActivity extends PreferenceActivity
 
         addPreferencesFromResource(R.xml.pref_general);
 
+        Preference button = (Preference)findPreference(getString(R.string.aboutButton));
+        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(getApplicationContext(), AboutActivity.class));
+                return true;
+            }
+        });
+
+
 
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_value_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_queryType_key)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_measurementsType_key)));
+        final SwitchPreference switchPreference = (SwitchPreference) findPreference(getString(R.string.share_location));
+        switchPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+            @Override
+            public boolean onPreferenceChange(Preference preference,
+                                              Object newValue) {
+                boolean switched = ((SwitchPreference) preference)
+                        .isChecked();
+                switchPreference.setChecked(!switched);
+
+
+                return true;
+            }
+
+        });
+
+    }
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+
     }
 
     private void bindPreferenceSummaryToValue(Preference preference) {

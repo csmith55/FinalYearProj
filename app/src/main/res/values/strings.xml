@@ -38,10 +38,39 @@
     <string name="website">Medium Text</string>
     <string name="phoneNumber">Medium Text</string>
     <string name="Go">New Button</string>
-    <string name="FindOutMore">Find Out More</string>
+    <string name="FindOutMore">Go!</string>
     <string name="pref_measurementsType_key">measurements</string>
     <string name="pref_measurementsType_km">Km</string>
     <string name="pref_measurementsType_miles">Miles</string>
     <string name="pref_measurementsType_label">Unit of Measurement</string>
+    <string name="NameLabel">Name : </string>
+    <string name="phoneNumberLabel">Phone :</string>
+    <string name="websiteLabel">Website :</string>
+    <string name="ReviewRatingLabel">Review Rating :</string>
+    <string name="ReviewsLabel">Reviews :</string>
+    <string name="aboutButton">about</string>
+    <string name="overview">This app was developed as part of a final year project for Queens University Belfast.
+    It was created using Android Studio and makes use of the following APIs:\n
+    Google Endpoints API\n
+    Google Datastore API\n
+    Google Directions API\n
+    Google Places API\n
+    Facebook Android API\n
+    JSI Spatial API</string>
+    <string name="icons">Thanks to Icons8 for use of the icons.<a href="http://icons8.com/"/></string>
+    <string name="listicons">These include : \n
+    <a href="http://icons8.com/web-app/3117/Shopping-Bag">Free Shopping Bag icon source</a> \n
+    <a href="http://icons8.com/web-app/6255/Health">Health icon</a> \n
+    <a href="http://icons8.com/web-app/7007/Food">Food icon</a> \n
+    <a href="http://icons8.com/web-app/5102/Bowling">Bowling icon</a> \n
+    <a href="http://icons8.com/web-app/3779/Map-Marker">Map Marker icon</a> \n
+    <a href="http://icons8.com/web-app/7555/Service-Bell">Service Bell icon</a>\n
+    <a href="http://icons8.com/web-app/3210/Find-User">Find User icon</a>\n
+    <a href="http://icons8.com/web-app/3156/Info">Info icon</a>\n
+    <a href="http://icons8.com/web-app/3299/Next">Next icon</a></string>
+    <string name="location">Location: </string>
+    <string name="FindOutMoreInfo">Find Out More!</string>
+    <string name="pref_shareLocation_key">Share Your Location</string>
+    <string name="share_location">ShareLocation</string>
 
 </resources>

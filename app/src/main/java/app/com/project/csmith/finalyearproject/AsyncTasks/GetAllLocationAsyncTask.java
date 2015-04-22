@@ -1,5 +1,7 @@
+/*
 package app.com.project.csmith.finalyearproject.AsyncTasks;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.example.csmith.myapplication.backend.myApi.MyApi;
@@ -13,9 +15,11 @@ import java.util.List;
 
 import app.com.project.csmith.finalyearproject.UIPermissions.MainFragment;
 
+*/
 /**
  * Created by csmith on 22/02/15.
- */
+ *//*
+
 public class GetAllLocationAsyncTask extends AsyncTask<Void, Void, Void> {
     private static MyApi myApiService = null;
     private List<GraphUser> graphUsers;
@@ -52,8 +56,8 @@ public class GetAllLocationAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         if (!allDetails.isEmpty())
-            new CalculateDistance(allDetails, mainFragment, usersLatLng);
+            new CalculateDistance(allDetails, mainFragment, usersLatLng, new ProgressDialog(mainFragment.getActivity()));
 
     }
 
-}
+}*/

@@ -2,26 +2,30 @@ package app.com.project.csmith.finalyearproject.AsyncTasks;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Date;
+
+
 /**
  * Created by csmith on 04/03/15.
  */
 public class FBFriendDetails {
 
     private LatLng latLng;
-    private String id;
+    private String id,name,distanceText;
     private Double distance;
-    private String name;
-    private String distanceText;
+    private Date date;
 
-    public FBFriendDetails(String id, String name, LatLng latLng) {
-        this.id = id;
-        this.name = name;
-        this.latLng = latLng;
-    }
 
     public FBFriendDetails(String id, LatLng latLng) {
         this.id = id;
         this.latLng = latLng;
+    }
+
+    public FBFriendDetails(String id, String name, LatLng latLng, Date date) {
+        this.id = id;
+        this.name = name;
+        this.latLng = latLng;
+        this.date = date;
     }
 
 
@@ -73,5 +77,13 @@ public class FBFriendDetails {
             return true;
         }
         return false;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

@@ -19,6 +19,8 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 
+import java.util.Date;
+
 import javax.inject.Named;
 
 /**
@@ -30,29 +32,33 @@ public class MyEndpoint {
 
 
     @ApiMethod(name = "updateLocation")
-    public void updateLocation(@Named("fbId") String facebookId, @Named("Lng") Double lat, @Named("Lat") Double lng) {
+    public void updateLocation(@Named("fbId") String facebookId, @Named("Lng") Double lat, @Named("Lat") Double lng, @Named("Date") Date date) {
 
         Entity newLocation = new Entity("Location", facebookId);
         newLocation.setProperty("lat", lat);
         newLocation.setProperty("lng", lng);
+        newLocation.setProperty("date", date);
 
         datastoreService.put(newLocation);
 
     }
 
     @ApiMethod(name = "getLocation")
-    public MyBean getLocation(@Named("facebookId") String facebookId) throws EntityNotFoundException {
+    public MyRTreeBean getLocation(@Named("facebookId") String facebookId) throws EntityNotFoundException {
 
         Key key = KeyFactory.createKey("Location", facebookId);
 
-        MyBean response = new MyBean();
+        MyRTreeBean response = new MyRTreeBean();
 
         Entity entity = datastoreService.get(key);
+
 
         double[] latLng = new double[2];
         latLng[0] = (double) entity.getProperty("lat");
         latLng[1] = (double) entity.getProperty("lng");
-        response.setData(latLng);
+        Date date = (Date) entity.getProperty("date");
+        LocationDetails locationDetails = new LocationDetails(entity.getKey().getName(),latLng[0],latLng[1],date);
+        response.setData(locationDetails);
         return response;
 
     }
@@ -67,7 +73,7 @@ public class MyEndpoint {
         PreparedQuery preparedQuery = datastoreService.prepare(query);
 
         for (Entity entity : preparedQuery.asIterable()) {
-            response.setData(new LocationDetails(entity.getKey().getName(), (double) entity.getProperty("lat"), (double) entity.getProperty("lng")));
+            response.setData(new LocationDetails(entity.getKey().getName(), (double) entity.getProperty("lat"), (double) entity.getProperty("lng"), new Date()));
         }
 
         return response;

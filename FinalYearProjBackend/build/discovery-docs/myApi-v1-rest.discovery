@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/nXSq9Fk9I0gmDXDmga5SK9U1l2o\"",
+ "etag": "\"u_zXkMELIlX4ktyNbM2XKD4vK8E/Q9fzeW3AZwPHbAVf45CE0Eo05r8\"",
  "discoveryVersion": "v1",
  "id": "myApi:v1",
  "name": "myApi",
@@ -77,6 +77,10 @@
    "id": "LocationDetails",
    "type": "object",
    "properties": {
+    "date": {
+     "type": "string",
+     "format": "date-time"
+    },
     "id": {
      "type": "string"
     },
@@ -90,28 +94,12 @@
     }
    }
   },
-  "MyBean": {
-   "id": "MyBean",
-   "type": "object",
-   "properties": {
-    "data": {
-     "type": "array",
-     "items": {
-      "type": "number",
-      "format": "double"
-     }
-    }
-   }
-  },
   "MyRTreeBean": {
    "id": "MyRTreeBean",
    "type": "object",
    "properties": {
     "data": {
-     "type": "array",
-     "items": {
-      "$ref": "LocationDetails"
-     }
+     "$ref": "LocationDetails"
     }
    }
   }
@@ -130,7 +118,7 @@
   },
   "getLocation": {
    "id": "myApi.getLocation",
-   "path": "mybean/{facebookId}",
+   "path": "myrtreebean/{facebookId}",
    "httpMethod": "GET",
    "parameters": {
     "facebookId": {
@@ -143,7 +131,7 @@
     "facebookId"
    ],
    "response": {
-    "$ref": "MyBean"
+    "$ref": "MyRTreeBean"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
@@ -151,9 +139,15 @@
   },
   "updateLocation": {
    "id": "myApi.updateLocation",
-   "path": "void/{fbId}/{Lng}/{Lat}",
+   "path": "void/{fbId}/{Lng}/{Lat}/{Date}",
    "httpMethod": "PUT",
    "parameters": {
+    "Date": {
+     "type": "string",
+     "required": true,
+     "format": "date-time",
+     "location": "path"
+    },
     "Lat": {
      "type": "number",
      "required": true,
@@ -175,7 +169,8 @@
    "parameterOrder": [
     "fbId",
     "Lng",
-    "Lat"
+    "Lat",
+    "Date"
    ],
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"

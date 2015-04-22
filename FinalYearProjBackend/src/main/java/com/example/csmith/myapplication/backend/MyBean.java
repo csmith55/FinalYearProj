@@ -6,13 +6,13 @@ package com.example.csmith.myapplication.backend;
  */
 public class MyBean {
 
-    private double[] myData;
+    private LocationDetails myData;
 
-    public double[] getData() {
+    public LocationDetails getData() {
         return myData;
     }
 
-    public void setData(double[] data) {
+    public void setData(LocationDetails data) {
         myData = data;
     }
 }

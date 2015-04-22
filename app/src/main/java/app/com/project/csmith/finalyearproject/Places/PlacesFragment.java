@@ -3,7 +3,6 @@ package app.com.project.csmith.finalyearproject.Places;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.os.Build;
@@ -84,7 +83,7 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
 
     private void displayAddressInfo(View rootView, LatLng latLng) {
         List<Address> addresses = GeocoderUtil.convertLatLngToAddress(latLng, getActivity());
-        ((TextView) rootView.findViewById(R.id.userLoc)).setText(addresses.get(0).getAddressLine(0) + "\n" + addresses.get(0).getAddressLine(1));
+        ((TextView) rootView.findViewById(R.id.userLoc)).setText(addresses.get(0).getAddressLine(0) + "  " + addresses.get(0).getAddressLine(1));
     }
 
     private void setupButtons(View rootView) {
@@ -157,37 +156,31 @@ public class PlacesFragment extends Fragment implements View.OnClickListener {
 
     private void filterVioletMarkers() {
         violetClicked = !violetClicked;
-        violetButton.setBackgroundColor(violetClicked ? Color.rgb(143, 0, 255) : Color.DKGRAY);
         fetchPlaces.loopFoodDrink();
     }
 
     private void filterOrangeMarkers() {
         orangeClicked = !orangeClicked;
-        orangeButton.setBackgroundColor(orangeClicked ? Color.rgb(255, 127, 0) : Color.DKGRAY);
         fetchPlaces.loopOthers();
     }
 
     private void filterMagentaMarkers() {
         magentaClicked = !magentaClicked;
-        magentaButton.setBackgroundColor(magentaClicked ? Color.rgb(255, 0, 255) : Color.DKGRAY);
         fetchPlaces.loopShopping();
     }
 
     private void filterGreenMarkers() {
         greenClicked = !greenClicked;
-        greenButton.setBackgroundColor(greenClicked ? Color.rgb(0, 255, 0) : Color.DKGRAY);
         fetchPlaces.loopEntertainment();
     }
 
     private void filterCyanMarkers() {
         cyanClicked = !cyanClicked;
-        cyanButton.setBackgroundColor(cyanClicked ? Color.rgb(0, 255, 255) : Color.DKGRAY);
         fetchPlaces.loopHealth();
     }
 
     private void filterBlueMarkers() {
         blueClicked = !blueClicked;
-        blueButton.setBackgroundColor(blueClicked ? Color.rgb(0, 127, 255) : Color.DKGRAY);
         fetchPlaces.loopServices();
     }
 

@@ -3,27 +3,100 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    >
 
-    <TextView
-        android:id="@+id/placeName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/PlaceName"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/nameRow">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/NameLabel"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/placeName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+            android:text="@string/PlaceName"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+             />
 
-    <ImageView
-        android:id="@+id/placeIcon"
-        android:layout_width="61dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_weight="0.15"
-        android:layout_above="@+id/placeReviews"
-        android:layout_alignRight="@+id/placeRating"
-        android:layout_alignEnd="@+id/placeRating" />
+
+        <ImageView
+            android:id="@+id/placeIcon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="0.1"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/phoneRow"
+        android:layout_below="@+id/nameRow">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/phoneNumberLabel"
+            android:textStyle="bold"
+            android:id="@+id/textView2"
+            />
+
+        <TextView
+            android:id="@+id/placeNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:autoLink="phone"
+            android:text="@string/phoneNumber"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            />
+
+     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/phoneRow">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/websiteLabel"
+            android:textStyle="bold"
+            android:id="@+id/textView3"
+            />
+
+        <TextView
+            android:id="@+id/placeWebsite"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:textSize="12sp"
+            android:autoLink="web"
+            android:text="@string/website"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+           />
+
+        </LinearLayout>
+
+
+
+
 
     <TextView
         android:id="@+id/placeRating"
@@ -31,31 +104,13 @@
         android:layout_height="wrap_content"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_alignTop="@+id/placeWebsite"
+        android:layout_above="@+id/placeReviews"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <TextView
-        android:id="@+id/placeWebsite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autoLink="web"
-        android:text="@string/website"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_below="@+id/placeNumber"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
-    <TextView
-        android:id="@+id/placeNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autoLink="phone"
-        android:text="@string/phoneNumber"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_below="@+id/placeName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+
+
 
     <ListView
         android:id="@+id/placeReviews"
@@ -63,6 +118,29 @@
         android:layout_height="350dp"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/ReviewRatingLabel"
+        android:textStyle="bold"
+        android:id="@+id/textView4"
+        android:layout_above="@+id/placeReviews"
+        android:layout_toLeftOf="@+id/placeRating"
+        android:layout_toStartOf="@+id/placeRating" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/ReviewsLabel"
+        android:textStyle="bold"
+        android:id="@+id/textView5"
+        android:layout_above="@+id/placeReviews"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

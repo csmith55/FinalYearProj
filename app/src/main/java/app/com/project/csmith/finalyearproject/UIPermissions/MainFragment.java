@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -119,8 +120,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
                     @Override
                     public void onCompleted(List<GraphUser> graphUsers, Response response) {
                         if (activeSession == Session.getActiveSession()) {
-                            if (graphUsers != null) {
-                                new GetLocationAsyncTask(graphUsers, friendDetails, mainFragment, new LatLng(getLocation().getLatitude(), getLocation().getLongitude())).execute();
+                            Location location = getLocation();
+                            if (graphUsers != null && location != null) {
+                                new GetLocationAsyncTask(graphUsers, friendDetails, mainFragment, new LatLng(location.getLatitude(), location.getLongitude())).execute();
                             }
                         }
 
@@ -134,7 +136,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updateFriends();
+        //updateFriends();
     }
 
     @Override
@@ -145,8 +147,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
 
         view = inflater.inflate(R.layout.fragment_main, container, false);
-        final Location lastKnown = getLocation();
-
         fbPermissionsLogin(view);
 
         // Find the user's profile picture custom view
@@ -195,12 +195,20 @@ public class MainFragment extends android.support.v4.app.Fragment {
     }
 
     private Location getLocation() {
-        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        String locationProvider;
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            locationProvider = LocationManager.GPS_PROVIDER;
+        }
+        else {
+            locationProvider = LocationManager.NETWORK_PROVIDER;
+        }
+
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                if (usersFacebookId != null)
+                boolean switchPreference = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("ShareLocation",true);
+                if (usersFacebookId != null && switchPreference )
                     new UpdateLocationAsyncTask(usersFacebookId).execute(new Pair<Context, LatLng>(getActivity(), new LatLng(location.getLatitude(), location.getLongitude())));
 
             }

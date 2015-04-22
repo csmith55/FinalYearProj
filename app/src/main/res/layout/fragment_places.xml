@@ -8,13 +8,17 @@
     <fragment
         android:id="@+id/placesMap"
         class="com.google.android.gms.maps.MapFragment"
-        android:layout_width="395dp"
-        android:layout_height="369dp"
+        android:layout_width="396dp"
+        android:layout_height="250dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/greenMarker"
         android:layout_gravity="center_horizontal|bottom"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/secondRow"
         android:layout_above="@+id/findOutMore" />
+
+
 
     <TextView
         android:id="@+id/userLoc"
@@ -24,89 +28,114 @@
         android:text="@string/UserLocation"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:id="@+id/blueMarker"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/greenMarker"
-
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/greenMarker"
-        android:layout_below="@+id/userLoc"
-        android:layout_gravity="left|top"
-        android:text="@string/BlueMarkers" />
-
-    <Button
-        android:id="@+id/greenMarker"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/orangeMarker"
-        android:text="@string/GreenMarker" />
-
-    <Button
-        android:id="@+id/violetMarker"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/blueMarker"
-
-        android:layout_centerHorizontal="true"
-        android:text="@string/VioletMarker" />
-
-    <Button
-        android:id="@+id/magentaMarker"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/placesMap"
-
-        android:layout_alignEnd="@+id/violetMarker"
-        android:layout_alignLeft="@+id/violetMarker"
-        android:layout_alignRight="@+id/violetMarker"
-        android:layout_alignStart="@+id/violetMarker"
-        android:text="@string/Magenta" />
-
-    <Button
-        android:id="@+id/cyanMarker"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/violetMarker"
-        android:layout_marginLeft="27dp"
-        android:layout_marginStart="27dp"
-        android:layout_toRightOf="@+id/findOutMore"
-        android:text="@string/CyanMarker" />
+        android:layout_alignParentEnd="true" />
 
-    <Button
-        android:id="@+id/orangeMarker"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/cyanMarker"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:id="@+id/topRow"
+        android:layout_below="@+id/userLoc"
+        >
+        <Button
+            android:id="@+id/blueMarker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:drawableTop="@drawable/servicebell"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/BlueMarkers"
+           />
 
-        android:layout_alignLeft="@+id/cyanMarker"
-        android:layout_alignRight="@+id/cyanMarker"
-        android:layout_alignStart="@+id/cyanMarker"
-        android:layout_below="@+id/cyanMarker"
-        android:text="@string/OrangeMarker" />
+
+
+        <Button
+            android:id="@+id/violetMarker"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:drawableTop="@drawable/food"
+
+            android:text="@string/VioletMarker"
+             />
+
+
+
+        <Button
+            android:id="@+id/cyanMarker"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:drawableTop="@drawable/health"
+
+            android:text="@string/CyanMarker"
+            />
+
+
+        </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@+id/topRow"
+        android:id="@+id/secondRow"
+       >
+        <Button
+            android:id="@+id/greenMarker"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:drawableTop="@drawable/bowling"
+            android:text="@string/GreenMarker"
+            android:textSize="15sp"
+             />
+        <Button
+            android:id="@+id/magentaMarker"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:drawableTop="@drawable/shoppingbag"
+
+            android:text="@string/Magenta"
+             />
+        <Button
+            android:id="@+id/orangeMarker"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".33"
+            android:drawableTop="@drawable/mapmarker"
+
+            android:text="@string/OrangeMarker"
+             />
+        </LinearLayout>
+
+
 
     <Button
         android:id="@+id/findOutMore"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:text="@string/FindOutMoreInfo"
+        style="?android:attr/borderlessButtonStyle"
+        android:drawableRight="@drawable/info"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/FindOutMore" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/location"
+        android:id="@+id/textView"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

@@ -73,9 +73,6 @@ public class MainActivity extends FragmentActivity {
         uiHelper.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setFragments();
-        // new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "This is a toast to my dearest friend.. you!"));
-
-
     }
 
     private void setFragments() {

@@ -1,5 +1,6 @@
 package app.com.project.csmith.finalyearproject.AsyncTasks;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -10,13 +11,13 @@ import com.infomatiq.jsi.Point;
 import com.infomatiq.jsi.Rectangle;
 import com.infomatiq.jsi.SpatialIndex;
 import com.infomatiq.jsi.rtree.RTree;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 import app.com.project.csmith.finalyearproject.UIPermissions.MainFragment;
 import app.com.project.csmith.finalyearproject.Utilities.CustomCompator;
@@ -31,22 +32,22 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
     private ArrayList<FBFriendDetails> friendDetails;
     private final ArrayList<FBFriendDetails> actualFBFriends, resultFriends;
     private LatLng usersLatLng;
-    private String type;
-    private String measurement;
+    private String type, measurement;
     private int value;
+    private ProgressDialog progress;
 
-    public CalculateDistance(ArrayList<FBFriendDetails> friendDetails, MainFragment mainFragment, LatLng usersLatLng) {
+    public CalculateDistance(ArrayList<FBFriendDetails> friendDetails, MainFragment mainFragment, LatLng usersLatLng, ProgressDialog progress) {
         this.friendDetails = friendDetails;
         this.mainFragment = mainFragment;
         this.usersLatLng = usersLatLng;
-
+        this.progress = progress;
         this.actualFBFriends = new ArrayList<>();
         resultFriends = new ArrayList<>();
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(mainFragment.getActivity());
-        type = preference.getString("type","Nearest");
-        value = Integer.parseInt(preference.getString("value","3"));
+        type = preference.getString("type", "Nearest");
+        value = Integer.parseInt(preference.getString("value", "3"));
         measurement = preference.getString("measurements", "Km");
-        rtreeQuery(5);
+       rtreeQuery(5);
     }
 
     @Override
@@ -97,21 +98,27 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
 
         for (int i = 0; i < friendDetails.size(); i++) {
             final FBFriendDetails friend = friendDetails.get(i);
-            if (measurement.contains("Miles")){
-                if(friend.getImperialDistance() <= maxDistance){
-                    friend.setDistanceText(String.format("%.2f", friend.getImperialDistance()) + " miles");
-                    resultFriends.add(friend);
+            if (withinDateRange(friend)) {
+                if (measurement.contains("Miles")) {
+                    if (friend.getImperialDistance() <= maxDistance) {
+                        friend.setDistanceText(String.format("%.2f", friend.getImperialDistance()) + " miles");
+                        resultFriends.add(friend);
 
-                }
-            }
-            else {
-                if (friend.getMetricDistance() <= maxDistance) {
-                    friend.setDistanceText(String.format("%.2f", friend.getMetricDistance()) + " km");
-                    resultFriends.add(friend);
+                    }
+                } else {
+                    if (friend.getMetricDistance() <= maxDistance) {
+                        friend.setDistanceText(String.format("%.2f", friend.getMetricDistance()) + " km");
+                        resultFriends.add(friend);
+                    }
                 }
             }
         }
         addFriendToResults();
+    }
+
+    private boolean withinDateRange(FBFriendDetails friend) {
+        Date fourHoursAgo = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 4);
+        return  friend.getDate().after(fourHoursAgo);
     }
 
 
@@ -122,14 +129,15 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
 
         for (int i = 0; i < numOfFriends; i++) {
             final FBFriendDetails friend = friendDetails.get(i);
-            if(measurement.equals("Miles")){
-                friend.setDistanceText(String.format("%.2f", friend.getImperialDistance()) + " miles");
-            }
-            else {
-                friend.setDistanceText(String.format("%.2f", friend.getMetricDistance()) + " km");
-            }
-            resultFriends.add(friend);
+            if (withinDateRange(friend)) {
+                if (measurement.equals("Miles")) {
+                    friend.setDistanceText(String.format("%.2f", friend.getImperialDistance()) + " miles");
+                } else {
+                    friend.setDistanceText(String.format("%.2f", friend.getMetricDistance()) + " km");
+                }
+                resultFriends.add(friend);
 
+            }
         }
         addFriendToResults();
 
@@ -208,6 +216,11 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
 
     private void addFriendToResults() {
             mainFragment.setResultsAdapter(resultFriends);
+        mainFragment.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                progress.dismiss();
+            }
+        });
     }
 
 

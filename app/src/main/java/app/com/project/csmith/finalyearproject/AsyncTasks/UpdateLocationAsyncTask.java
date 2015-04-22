@@ -6,6 +6,7 @@ import android.util.Pair;
 
 import com.example.csmith.myapplication.backend.myApi.MyApi;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.api.client.util.DateTime;
 
 import java.io.IOException;
 
@@ -22,7 +23,7 @@ public class UpdateLocationAsyncTask extends AsyncTask<Pair<Context, LatLng>, Vo
         myApiService = ApiBuilder.buildApi(myApiService);
 
         try {
-            myApiService.updateLocation(facebookId, params[0].second.latitude, params[0].second.longitude).execute();
+            myApiService.updateLocation(facebookId, params[0].second.latitude, params[0].second.longitude, new DateTime(System.currentTimeMillis())).execute();
         } catch (IOException e) {
 
         }
