@@ -26,10 +26,11 @@
         android:layout_height="56dp"
         android:layout_gravity="center_horizontal|top"
         android:text="@string/UserLocation"
+        android:textSize="15sp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignLeft="@+id/findOutMore"
+        android:layout_alignStart="@+id/findOutMore" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -120,7 +121,7 @@
     <Button
         android:id="@+id/findOutMore"
         android:layout_width="200dp"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:text="@string/FindOutMoreInfo"
         style="?android:attr/borderlessButtonStyle"
         android:drawableRight="@drawable/info"

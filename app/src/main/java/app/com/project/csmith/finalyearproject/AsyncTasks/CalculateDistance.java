@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.infomatiq.jsi.Point;
@@ -167,8 +168,6 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
             checkIntersection(i,rects,p);
         }
 
-
-
         if(isNearest && actualFBFriends.size() < value){
             intValue = intValue * 2;
             actualFBFriends.clear();
@@ -215,7 +214,14 @@ public class CalculateDistance extends AsyncTask<Void, Void, Void> {
     }
 
     private void addFriendToResults() {
+        if (resultFriends.isEmpty()){
+            Toast.makeText(mainFragment.getActivity(), "No friends found", Toast.LENGTH_LONG).show();
+        }
+        else {
             mainFragment.setResultsAdapter(resultFriends);
+            Toast.makeText(mainFragment.getActivity(), "Found friends!", Toast.LENGTH_LONG).show();
+        }
+
         mainFragment.getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 progress.dismiss();
