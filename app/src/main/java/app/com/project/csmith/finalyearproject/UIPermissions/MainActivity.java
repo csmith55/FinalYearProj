@@ -28,7 +28,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.facebook.AppEventsLogger;
@@ -71,6 +70,7 @@ public class MainActivity extends FragmentActivity {
         //getKeyHashForFacebook();
         uiHelper = new UiLifecycleHelper(this, callback);
         uiHelper.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         setFragments();
     }
@@ -105,9 +105,9 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    @Override
+  /*  @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // only add the menu when the selection fragment is showing
+       *//* // only add the menu when the selection fragment is showing
         if (getFragments()[SELECTION].isVisible()) {
             if (menu.size() == 0) {
                 settings = menu.add(R.string.settings);
@@ -117,8 +117,8 @@ public class MainActivity extends FragmentActivity {
             menu.clear();
             settings = null;
         }
-        return false;
-    }
+        return false;*//*
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -199,6 +199,7 @@ public class MainActivity extends FragmentActivity {
         uiHelper.onResume();
         // Logs 'install' and 'app activate' App Events.
         AppEventsLogger.activateApp(this);
+
     }
 
     @Override

@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -64,6 +65,34 @@ public class MainFragment extends android.support.v4.app.Fragment {
     View view;
 
     private Intent intent;
+    LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            boolean switchPreference = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("ShareLocation",true);
+            if (usersFacebookId != null && switchPreference ) {
+                new UpdateLocationAsyncTask(usersFacebookId).execute(new Pair<Context, LatLng>(getActivity(), new LatLng(location.getLatitude(), location.getLongitude())));
+                Log.d("UPDATELOC", "IN UPDATE LOC");
+
+            }
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
+    private LocationManager locationManager;
+    private String locationProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,9 +100,26 @@ public class MainFragment extends android.support.v4.app.Fragment {
         uiHelper = new UiLifecycleHelper(getActivity(), callback);
         uiHelper.onCreate(savedInstanceState);
        setHasOptionsMenu(true);
+        setLocationListener();
         updateFriends();
+    }
+
+    private void setLocationListener() {
+        locationProvider = "";
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            locationProvider = LocationManager.GPS_PROVIDER;
+        }
+        else if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            locationProvider = LocationManager.NETWORK_PROVIDER;
+        }
+        else {
+            locationProvider = LocationManager.NETWORK_PROVIDER;
+            Toast.makeText(getActivity(), "Please enable your location!", Toast.LENGTH_LONG).show();
+        }
 
 
+        locationManager.requestLocationUpdates(locationProvider, 30000, 10, locationListener);
     }
 
     @Override
@@ -123,6 +169,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
                             Location location = getLocation();
                             if (graphUsers != null && location != null) {
                                 new GetLocationAsyncTask(graphUsers, friendDetails, mainFragment, new LatLng(location.getLatitude(), location.getLongitude())).execute();
+                                Log.d("GETLOCS", "IN GET  LOC");
                             }
                         }
 
@@ -136,7 +183,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        //updateFriends();
+
     }
 
     @Override
@@ -160,22 +207,22 @@ public class MainFragment extends android.support.v4.app.Fragment {
     private void setAdapterAndIntents(View view,ArrayList<FBFriendDetails> details) {
         ArrayList<String> address = new ArrayList<>();
 
-        for(int i = 0; i < details.size(); i++) {
-            List<Address> addresses = GeocoderUtil.convertLatLngToAddress(details.get(i).getLatLng(), getActivity());
-            address.add(addresses.get(0).getAddressLine(0));
-        }
-         customListAdapter = new CustomListAdapter(getActivity(),address,details);
-        resultsList = (ListView) view.findViewById(R.id.list);
-        resultsList.setAdapter(customListAdapter);
-        resultsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-                createDetailActivityIntent(position);
+            for (int i = 0; i < details.size(); i++) {
+                List<Address> addresses = GeocoderUtil.convertLatLngToAddress(details.get(i).getLatLng(), getActivity());
+                address.add(!addresses.isEmpty() ? addresses.get(0).getAddressLine(0) : "");
             }
-        });
-    }
+            customListAdapter = new CustomListAdapter(getActivity(), address, details);
+            resultsList = (ListView) view.findViewById(R.id.list);
+            resultsList.setAdapter(customListAdapter);
+            resultsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                    createDetailActivityIntent(position);
+                }
+            });
+        }
 
     private void createDetailActivityIntent(int position) {
         String name = customListAdapter.getName(position);
@@ -195,45 +242,22 @@ public class MainFragment extends android.support.v4.app.Fragment {
     }
 
     private Location getLocation() {
-        String locationProvider;
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            locationProvider = LocationManager.GPS_PROVIDER;
+        List<String> AllProviders = locationManager.getProviders(true);
+        Location bestAccuracy = null;
+        for (String provider : AllProviders) {
+            Location location = locationManager.getLastKnownLocation(provider);
+            if (location == null) {
+                continue;
+            }
+            if (bestAccuracy == null || location.getAccuracy() < bestAccuracy.getAccuracy()) {
+                bestAccuracy = location;
+            }
         }
-        else {
-            locationProvider = LocationManager.NETWORK_PROVIDER;
+        if (bestAccuracy == null) {
+            return null;
         }
+        return  bestAccuracy;
 
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                boolean switchPreference = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("ShareLocation",true);
-                if (usersFacebookId != null && switchPreference )
-                    new UpdateLocationAsyncTask(usersFacebookId).execute(new Pair<Context, LatLng>(getActivity(), new LatLng(location.getLatitude(), location.getLongitude())));
-
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
-
-        final Location lastKnown = locationManager.getLastKnownLocation(locationProvider);
-
-        return lastKnown;
     }
 
 
@@ -245,7 +269,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
                 (session.isOpened() || session.isClosed())) {
             onSessionStateChange(session.getState());
         }
-
         uiHelper.onResume();
     }
 

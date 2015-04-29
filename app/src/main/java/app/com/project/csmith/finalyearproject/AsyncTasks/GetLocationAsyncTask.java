@@ -2,6 +2,7 @@ package app.com.project.csmith.finalyearproject.AsyncTasks;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.example.csmith.myapplication.backend.myApi.MyApi;
 import com.example.csmith.myapplication.backend.myApi.model.LocationDetails;
@@ -69,6 +70,8 @@ public class GetLocationAsyncTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         if (!friendDetails.isEmpty()) {
             new CalculateDistance(friendDetails, mainFragment, usersLatLng,progress).execute();
+        } else{
+            Toast.makeText(mainFragment.getActivity(), "Press the top right icon to get started!", Toast.LENGTH_LONG).show();
         }
 
     }

@@ -126,7 +126,7 @@ public class PlaceDetailsFragment extends android.app.Fragment {
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT,
-                "Hey! Let's meet up here: " + place.getName() + "\nSee you soon! #GeoSocial");
+                "Hey! Let's meet up here: " + place.getName() + "\nSee you soon! #FYP");
         return shareIntent;
     }
 

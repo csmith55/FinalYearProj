@@ -89,7 +89,7 @@ public class UrlUtility {
         final String ORIGIN_PARAM = "origins";
         final String DESTINATION_PARAM = "destinations";
 
-
+        Log.d("Build URI", "Distance url");
         return Uri.parse(PLACES_URL).buildUpon()
                 .appendQueryParameter(ORIGIN_PARAM, ORIGIN)
                 .appendQueryParameter(DESTINATION_PARAM, DESTINATION)

@@ -14,19 +14,21 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs {
+        release {
+
+            keyAlias 'fypalias'
+            keyPassword 'YH6ZPBSY38'
+            storeFile file('fyprelease.keystore')
+            storePassword 'YH6ZPBSY38'
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
+            signingConfig signingConfigs.release
+            proguardFile '/Users/csmith/AndroidStudioProjects/FinalYearProj/app/proguard-rules.pro'
         }
-        debug {
-
-            proguardFile 'proguard-rules.txt'
-            debuggable true
-            testCoverageEnabled = true
-
-        }
+        
     }
 }
 
