@@ -3,10 +3,8 @@ package app.com.project.csmith.finalyearproject.Places;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import app.com.project.csmith.finalyearproject.PlaceDetails.Reviews;
-
 /**
- * Created by csmith on 05/02/15.
+ * Used to store all the information regarding a place
  */
 public class Places implements Parcelable {
     @SuppressWarnings("unused")

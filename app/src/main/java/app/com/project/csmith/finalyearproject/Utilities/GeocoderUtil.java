@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by csmith on 05/03/15.
+ * Converts the LatLng to a street address to be displayed
  */
 public abstract class GeocoderUtil {
 

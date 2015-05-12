@@ -32,6 +32,11 @@ android {
     }
 }
 
+task copyResDirectoryToClasses(type: Copy){
+    from "/Users/csmith/AndroidStudioProjects/FinalYearProj/app/src/main/res"
+    into "${buildDir}/intermediates/classes/app/src/main/debug/res"
+}
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

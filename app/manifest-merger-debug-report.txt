@@ -89,7 +89,7 @@ ADDED from AndroidManifest.xml:38:13
 		ADDED from AndroidManifest.xml:40:17
 	android:name
 		ADDED from AndroidManifest.xml:39:17
-activity#app.com.project.csmith.finalyearproject.PlaceDetails.DetailActivity
+activity#app.com.project.csmith.finalyearproject.PlacesUI.DetailActivity
 ADDED from AndroidManifest.xml:44:9
 	android:label
 		ADDED from AndroidManifest.xml:46:13

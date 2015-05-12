@@ -5,7 +5,7 @@
     android:textColor="#1abc9c"
     android:textStyle="italic"
     android:typeface="serif"
-    tools:context="app.com.project.csmith.finalyearproject.Places.PlaceDetailActivity">
+    tools:context="app.com.project.csmith.finalyearproject.PlacesUI.PlaceDetailActivity">
 
     <item
         android:id="@+id/action_share"

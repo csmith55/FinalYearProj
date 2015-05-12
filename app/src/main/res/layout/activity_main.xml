@@ -3,18 +3,18 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="app.com.project.csmith.finalyearproject.UIPermissions.MainActivity"
+    tools:context="app.com.project.csmith.finalyearproject.HomeUI.MainActivity"
     tools:ignore="MergeRootFrame">
 
     <fragment
         android:id="@+id/selectionFragment"
-        android:name="app.com.project.csmith.finalyearproject.UIPermissions.MainFragment"
+        android:name="app.com.project.csmith.finalyearproject.HomeUI.MainFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="app.com.project.csmith.finalyearproject.UIPermissions.SplashFragment"
+        android:name="app.com.project.csmith.finalyearproject.HomeUI.SplashFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

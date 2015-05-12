@@ -8,7 +8,7 @@
     android:key="@string/pref_value_key"
     android:singleLine="true"
     android:title="@string/pref_value_label"
-    tools:context="app.com.project.csmith.finalyearproject.PlaceDetails.DetailActivity"
+    tools:context="app.com.project.csmith.finalyearproject.PlacesUI.DetailActivity"
     tools:ignore="MergeRootFrame">
 
 

@@ -14,12 +14,18 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by csmith on 10/02/15.
+ * Builds the connections for API calls
  */
 public class UrlUtility {
     private static final String LOG_TAG = "";
 
-
+    /**
+     * Creates the http connections and opens streams
+     * @param placeId placeID
+     * @param latLng latLng
+     * @param distanceApi is distanceApi
+     * @return String
+     */
     public static String makeConnection(String placeId, ArrayList<LatLng> latLng, boolean distanceApi) {
 
         HttpURLConnection urlConnection = null;
@@ -77,10 +83,15 @@ public class UrlUtility {
 
     }
 
+    /**
+     * Creates the URL for the Google Distance API
+     * @param latLng list of LatLng to compare the distances between
+     * @return Uri
+     */
     private static Uri buildUri(ArrayList<LatLng> latLng) {
         final String PLACES_URL =
                 "https://maps.googleapis.com/maps/api/distancematrix/json?";
-        final String KEY = "AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";
+        final String KEY = "AIzaSyfewofjriogjeriBkVIVTxC1BMe5xr_KuFaDMQ";
         final String ORIGIN = String.valueOf(latLng.get(0).latitude) + "," + String.valueOf(latLng.get(0).longitude);
         final String DESTINATION = String.valueOf(latLng.get(1).latitude) + "," + String.valueOf(latLng.get(1).longitude);
 
@@ -98,7 +109,11 @@ public class UrlUtility {
 
     }
 
-
+    /**
+     * Creates the URL for the Google Nearby Search API
+     * @param latLng l LatLng to find places nearby to
+     * @return Uri
+     */
     private static Uri buildUri(LatLng latLng) {
 
         final String PLACES_URL =
@@ -118,6 +133,11 @@ public class UrlUtility {
                 .build();
     }
 
+    /**
+     * Creates the URL for the Google details API
+     * @param placeId placeId to find the details of
+     * @return Uri
+     */
     private static Uri buildUri(String placeId) {
         final String detailsUrl = "https://maps.googleapis.com/maps/api/place/details/json?";
         final String key = "AIzaSyCvXb5QrKw5BkVIVTxC1BMe5xr_KuFaDMQ";

@@ -3,9 +3,6 @@ package com.example.csmith.myapplication.backend;
 
 import java.util.Date;
 
-/**
- * Created by csmith on 01/04/15.
- */
 public class LocationDetails {
 
     private final String id;

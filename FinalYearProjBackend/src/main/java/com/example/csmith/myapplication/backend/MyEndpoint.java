@@ -49,19 +49,14 @@ public class MyEndpoint {
         Key key = KeyFactory.createKey("Location", facebookId);
 
         MyRTreeBean response = new MyRTreeBean();
-        try {
-            Entity entity = datastoreService.get(key);
+        Entity entity = datastoreService.get(key);
 
-            double[] latLng = new double[2];
-            latLng[0] = (double) entity.getProperty("lat");
-            latLng[1] = (double) entity.getProperty("lng");
-            Date date = (Date) entity.getProperty("date");
-            LocationDetails locationDetails = new LocationDetails(entity.getKey().getName(),latLng[0],latLng[1],date);
-            response.setData(locationDetails);
-        }catch (EntityNotFoundException e){
-            System.out.print("In entity exception!");
-        }
-
+        double[] latLng = new double[2];
+        latLng[0] = (double) entity.getProperty("lat");
+        latLng[1] = (double) entity.getProperty("lng");
+        Date date = (Date) entity.getProperty("date");
+        LocationDetails locationDetails = new LocationDetails(entity.getKey().getName(), latLng[0], latLng[1], date);
+        response.setData(locationDetails);
 
         return response;
 

@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="app.com.project.csmith.finalyearproject.UIPermissions.MainActivity">
+    tools:context="app.com.project.csmith.finalyearproject.HomeUI.MainActivity">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
